@@ -16,7 +16,6 @@
   margin: auto;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 20px;
   background-color: #f9f9f9;
   overflow-y: auto; /* Enable vertical scrolling */
 }
@@ -30,21 +29,76 @@
   max-width: 80%;
 }
 
-.chat-bubble.teacher {
-  align-self: flex-start;
-  background-color: #d1e7ff;
-}
-
 .chat-bubble.student {
   align-self: flex-end;
-  background-color: #ffecb3;
+  flex-direction: row-reverse;
 }
 
+.chat-bubble.student p {
+  background-color: #f3a0de;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  margin: 0 10px 0 0;
+  flex: 1;
+  position: relative;
+}
+
+.chat-bubble.student p::after {
+  content: "";
+  position: absolute;
+  right: -20px; /* 三角形の位置を調整 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid #f3a0de; /* 三角形の色と位置 */
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.chat-bubble.teacher {
+  align-self: flex-start;
+}
+
+.chat-bubble.teacher p {
+  background-color: #e1ee6e;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  margin: 0 0 0 10px;
+  flex: 1;
+  position: relative;
+}
+
+.chat-bubble.teacher p::after {
+  content: "";
+  position: absolute;
+  left: -20px; /* 三角形の位置を調整 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-right: 20px solid #e1ee6e; /* 三角形の色と位置 */
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+
+
 .icon {
-  width: 40px;
-  height: 40px;
+  max-width: 60px;
+  height: 60px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin: 10px;
+}
+
+.image {
+  max-width: 60%;
+  height: auto;
+  border-radius: 10px;
+  background: #f1f1f1;
+  padding: 10px;
 }
 
 .next-button {
@@ -63,3 +117,81 @@
 .next-button:hover {
   background-color: #0056b3;
 }
+
+.links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 10px; /* リンク間の間隔を指定 */
+}
+
+.links-container a {
+  text-decoration: none;
+  color: #007bff; /* リンクの色を指定 */
+  font-size: 16px; /* リンクのフォントサイズを指定 */
+}
+
+.links-container a:hover {
+  text-decoration: underline;
+}
+
+.progress-bar-container {
+  max-width: 600px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  background-color: #e0e0e0;
+  height: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s ease-in-out;
+}
+
+.chapter-overview {
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.section-title {
+  background-color: #4CAF50;
+  display: block;
+  margin: 0 auto;
+  color: white;
+  padding: 10px;
+  margin: 20px 0 20px 20px;
+  border-radius: 5px;
+}
+
+.quiz-container {
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.quiz-option {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quiz-option:hover {
+  background-color: #d0d0d0;
+}
+
