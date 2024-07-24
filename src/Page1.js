@@ -266,7 +266,7 @@ function Page1() {
   const progressPercentage = ((visibleStep + 1) / content.length) * 100;
 
   return (
-    <div className="App">
+    <div className="Content">
       <h1>「マーケティング」ってどう考えればいいの？</h1>
       
       {visibleStep === 0 && (
