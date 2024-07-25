@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
 import teacherIcon from './teacher.png';
 import studentIcon from './student.png';
@@ -18,6 +19,90 @@ function Page1() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const chatContainerRef = useRef(null);
+  const [studyTime, setStudyTime] = useState(0);
+  const [startTime, setStartTime] = useState(Date.now());
+  const navigate = useNavigate();
+
+  const saveStudyTime = async (time) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:5000/api/progress/update', {
+        chapterId: 1, // 現在のチャプターIDを指定
+        studyTime: time
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      console.error('Error saving study time', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' || document.hidden) {
+        const endTime = Date.now();
+        const elapsed = Math.floor((endTime - startTime) / 1000);
+        setStudyTime(prevTime => {
+          const newTime = prevTime + elapsed;
+          saveStudyTime(newTime);
+          return newTime;
+        });
+      } else {
+        setStartTime(Date.now());
+      }
+    };
+
+    const handleWindowFocus = () => {
+      setStartTime(Date.now());
+    };
+
+    const handleWindowBlur = () => {
+      const endTime = Date.now();
+      const elapsed = Math.floor((endTime - startTime) / 1000);
+      setStudyTime(prevTime => {
+        const newTime = prevTime + elapsed;
+        saveStudyTime(newTime);
+        return newTime;
+      });
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleWindowFocus);
+    window.addEventListener('blur', handleWindowBlur);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleWindowFocus);
+      window.removeEventListener('blur', handleWindowBlur);
+      const endTime = Date.now();
+      const elapsed = Math.floor((endTime - startTime) / 1000);
+      saveStudyTime(studyTime + elapsed);
+    };
+  }, [startTime, studyTime]);
+
+  const completeChapter = async () => {
+    try {
+      const endTime = Date.now();
+      const elapsed = Math.floor((endTime - startTime) / 1000);
+      const totalStudyTime = studyTime + elapsed;
+      await saveStudyTime(totalStudyTime); // チャプター完了時にも勉強時間を保存
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:5000/api/progress/update', {
+        chapterId: 1,
+        completed: true,
+        studyTime: totalStudyTime
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      navigate('/');
+    } catch (error) {
+      console.error('Error completing chapter', error);
+    }
+  };
 
   const chapterOverview = "このチャプターでは、マーケティングの基本概念、現代のデジタルマーケティング、そしてマーケティングの重要なモデルと法則について学びます。";
 
@@ -240,8 +325,11 @@ function Page1() {
     setShowFeedback(false);
     if (currentQuestionIndex < quizQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      completeChapter(); // チャプター終了
     }
   };
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -331,6 +419,7 @@ function Page1() {
               <h2>テスト完了</h2>
               <p>あなたのスコア: {score}/{quizQuestions.length}</p>
               <p>お疲れ様でした！このテストを通じて、マーケティングの基本概念をより深く理解できたことを願っています。</p>
+              <button onClick={completeChapter} className="next-button">チャプターを完了する</button>
             </>
           )}
         </div>
