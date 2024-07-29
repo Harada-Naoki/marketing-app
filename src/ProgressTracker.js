@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import apiRequest from './apiRequest';
+import apiRequest from './utils/apiRequest';
+import './App.css';
 
 const formatTime = (seconds) => {
   const h = Math.floor(seconds / 3600);
@@ -15,7 +16,7 @@ const ProgressTracker = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await apiRequest('http://localhost:5000/api/progress/status');
+        const response = await apiRequest('/api/progress/status');
         setProgress(response.data.progress);
         setTotalStudyTime(response.data.totalStudyTime);
       } catch (error) {
@@ -27,16 +28,27 @@ const ProgressTracker = () => {
   }, []);
 
   return (
-    <div>
-      <h2>学習の進捗状況</h2>
-      <ul>
+    <div className='progress-container'>
+      <h2 className='progress-title'>学習の進捗状況</h2>
+      <ul className='progress-list'>
         {progress.map((item, index) => (
-          <li key={index}>
-            チャプター {item.chapterId}: {item.completed ? '完了' : '未完了'} - 勉強時間: {formatTime(item.studyTime)}
+          <li key={index} className='progress-item'>
+            <div className='chapter-info'>
+              <span className='chapter-id'>チャプター {item.chapterId}</span>
+              <span className={`chapter-status ${item.completed ? 'status-completed' : 'status-incomplete'}`}>
+                {item.completed ? '完了' : '未完了'}
+              </span>
+            </div>
+            <span className='study-time'>
+              勉強時間: {formatTime(item.studyTime)}
+            </span>
           </li>
         ))}
       </ul>
-      <p>総勉強時間: {formatTime(totalStudyTime)}</p>
+      <div className='total-study-time'>
+        <span className='total-time-label'>総勉強時間:</span>
+        <span className='total-time-value'>{formatTime(totalStudyTime)}</span>
+      </div>
     </div>
   );
 };

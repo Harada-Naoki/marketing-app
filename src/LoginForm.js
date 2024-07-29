@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import apiRequest from './utils/apiRequest'; // apiRequest を使用する場合
+import './App.css';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -11,20 +12,24 @@ const LoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+      const response = await apiRequest('/api/auth/login', {
+        method: 'POST',
+        data: { username, password },
+        noAuth: true
+      });
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
       navigate('/marketing-app');
     } catch (error) {
-      console.error('Login error', error);
+      alert('Login error: ' + error.message);
       setError('Login failed. Please try again.');
     }
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="username">Username</label>
@@ -56,9 +61,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-
-
-
-
-

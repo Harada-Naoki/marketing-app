@@ -15,7 +15,7 @@ console.log('MONGO_URI:', process.env.MONGO_URI);
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 // ミドルウェア
-app.use(cors());
+app.use(cors()); // ここでCORSミドルウェアを追加
 app.use(bodyParser.json());
 
 // データベース接続
@@ -38,5 +38,6 @@ app.get('/protected', authenticateToken, (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
 
 

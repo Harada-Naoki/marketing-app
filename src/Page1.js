@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiRequest from './utils/apiRequest';
 import './App.css';
 import teacherIcon from './teacher.png';
 import studentIcon from './student.png';
@@ -25,13 +25,11 @@ function Page1() {
 
   const saveStudyTime = async (time) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/progress/update', {
-        chapterId: 1, // 現在のチャプターIDを指定
-        studyTime: time
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      await apiRequest('/api/progress/update', {
+        method: 'POST',
+        data: {
+          chapterId: 1, // 現在のチャプターIDを指定
+          studyTime: time
         }
       });
     } catch (error) {
@@ -88,20 +86,28 @@ function Page1() {
       const elapsed = Math.floor((endTime - startTime) / 1000);
       const totalStudyTime = studyTime + elapsed;
       await saveStudyTime(totalStudyTime); // チャプター完了時にも勉強時間を保存
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/progress/update', {
-        chapterId: 1,
-        completed: true,
-        studyTime: totalStudyTime
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+
+      console.log('Sending complete request:', {
+          chapterId: 1,
+          completed: true,
+          studyTime: totalStudyTime
       });
+
+      const response = await apiRequest('/api/progress/update', {
+          method: 'POST',
+          data: {
+              chapterId: 1,
+              completed: true,
+              studyTime: totalStudyTime
+          }
+      });
+
+      console.log('Complete request response:', response);
+
       navigate('/');
-    } catch (error) {
+  } catch (error) {
       console.error('Error completing chapter', error);
-    }
+  }
   };
 
   const chapterOverview = "このチャプターでは、マーケティングの基本概念、現代のデジタルマーケティング、そしてマーケティングの重要なモデルと法則について学びます。";

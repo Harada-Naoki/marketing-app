@@ -34,18 +34,22 @@ const ProtectedRoute = ({ element }) => {
 
 const HomePage = ({ onLogout }) => {
   return (
-    <div>
-      <h1>学習の進捗状況</h1>
+    <div className="home-container">
       <ProgressTracker />
-      <h1>目次ページ</h1>
-      <button onClick={onLogout}>ログアウト</button>
-      <nav className="Navigation">
-        <ul>
-          <li>
-            <Link to="/marketing-app/Page1">「マーケティング」ってどう考えればいいの？</Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="content-section">
+        <h1 className="content-title">目次</h1>
+        <nav className="content-navigation">
+          <ul className="content-list">
+            <li className="content-item">
+              <Link to="/marketing-app/Page1" className="content-link">「マーケティング」ってどう考えればいいの？</Link>
+            </li>
+            {/* 必要に応じて他の目次項目を追加 */}
+          </ul>
+        </nav>      
+      </div>
+      <div>
+        <button onClick={onLogout} className="logout-button">ログアウト</button>
+      </div>
     </div>
   );
 };

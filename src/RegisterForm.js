@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import apiRequest from './utils/apiRequest';
+import './App.css';
 
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
@@ -11,25 +12,23 @@ const RegisterForm = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      console.log('Registering user:', { username, password });
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
-        username,
-        password
+      const response = await apiRequest('/api/auth/register', {
+        method: 'POST',
+        data: { username, password }
       });
-      console.log('Registration response:', response.data);
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
       navigate('/marketing-app');
     } catch (error) {
-      console.error('Registration error', error);
+      alert(`Registration error: ${error.message}`); // デバッグ用アラート
       setError('Registration failed. Please try again.');
     }
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Register</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleRegister}>
         <div>
           <label htmlFor="username">Username</label>
@@ -61,6 +60,13 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
+
+
+
+
+
+
+
 
 
 
