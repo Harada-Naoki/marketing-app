@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // 進捗スキーマの定義
 const ProgressSchema = new Schema({
-  chapterId: Number,
+  chapterId: String,
   completed: Boolean,
   studyTime: Number // 勉強時間（分）
 });
