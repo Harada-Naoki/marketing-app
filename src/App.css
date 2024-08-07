@@ -441,10 +441,14 @@ input[type="password"] {
   max-width: 600px;
   height: 70vh; /* Set a fixed height to make it scrollable */
   margin: auto;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-radius: 10px 10px 0 0;
   background-color: #f9f9f9;
-  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-y: auto; /* Enable vertical scrolling for the chat content */
+  position: relative;
+  padding-bottom: 10px; /* ボタンの高さ分の余白を追加 */
 }
 
 .chat-bubble {
@@ -453,12 +457,13 @@ input[type="password"] {
   padding: 10px 20px;
   margin: 10px 0;
   border-radius: 20px;
-  max-width: 80%;
+  max-width: 80%; /* 親要素の最大幅を設定 */
+  word-wrap: break-word; /* 長い単語の折り返しを有効にする */
 }
 
 .chat-bubble.student {
   flex-direction: row-reverse;
-  float: right;
+  margin-left: auto;
 }
 
 .chat-bubble.student p {
@@ -467,8 +472,8 @@ input[type="password"] {
   border-radius: 15px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   margin: 0 10px 0 0;
-  flex: 1;
   position: relative;
+  word-wrap: break-word; /* 長い単語の折り返しを有効にする */
 }
 
 .chat-bubble.student p::after {
@@ -490,8 +495,8 @@ input[type="password"] {
   border-radius: 15px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   margin: 0 0 0 10px;
-  flex: 1;
   position: relative;
+  word-wrap: break-word; /* 長い単語の折り返しを有効にする */
 }
 
 .chat-bubble.teacher p::after {
@@ -522,28 +527,12 @@ input[type="password"] {
   padding: 10px;
 }
 
-.next-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.next-button:hover {
-  background-color: #0056b3;
-}
-
 .links-container {
   display: flex;
   flex-direction: column;
   align-items: center; 
   gap: 10px; /* リンク間の間隔を指定 */
+  margin-top: 20px;
 }
 
 .links-container a {
@@ -587,9 +576,30 @@ input[type="password"] {
   max-width: 600px;
   display: block;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  background-color: #66B3FF;
   padding: 20px;
   border-radius: 5px;
+  margin: 20px;
+}
+
+.quiz-container h2 {
+  background-color: #ff6565;
+  color: white;
+  padding: 10px;
+  margin: 0 20px 20px 20px 20px;
+  border-radius: 5px;
+  text-align: center;
+
+}
+
+.quiz-container p {
+  font-weight: bold;
+  font-size: large;
+}
+
+.quiz-container span {
+  color: red;
+  font-size: larger;
 }
 
 .quiz-option {
@@ -597,7 +607,7 @@ input[type="password"] {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  background-color: #e0e0e0;
+  background-color: #ffffff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -605,5 +615,36 @@ input[type="password"] {
 
 .quiz-option:hover {
   background-color: #d0d0d0;
+}
+
+
+.next-button-container {
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #f9f9f9;
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-radius: 0 0 10px 10px;
+  background-color: #f9f9f9;
+}
+
+.next-button {
+  padding: 10px 20px;
+  background-color: #4CAF50; /* ボタンの背景色 */
+  color: white; /* ボタンの文字色 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 60%;
+  display: block;
+  margin: 0 auto;
+}
+
+.next-button:hover {
+  background-color: #45a049; /* ホバー時の背景色 */
 }
 

@@ -5,7 +5,7 @@ const QuizQuestion = ({ question, options, handleAnswer, showFeedback, isCorrect
     {showResults ? (
       <>
         <h2>テスト完了</h2>
-        <p>あなたのスコア: {score}/{totalQuestions}</p>
+        <p><span>あなたのスコア: {score}/{totalQuestions}</span></p>
         <p>お疲れ様でした！このテストを通じて、マーケティングの基本概念をより深く理解できたことを願っています。</p>
         <button onClick={completeChapter} className="next-button">チャプターを完了する</button>
       </>
@@ -21,7 +21,7 @@ const QuizQuestion = ({ question, options, handleAnswer, showFeedback, isCorrect
           ))
         ) : (
           <div className="feedback">
-            <p>{isCorrect ? "正解です！" : "残念、不正解です。"}</p>
+            <p><span>{isCorrect ? "正解です！" : "残念、不正解です。"}</span></p>
             <p>{explanation}</p>
             {currentQuestionIndex < totalQuestions - 1 ? (
               <button onClick={nextQuestion} className="next-button">次の問題へ</button>

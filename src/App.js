@@ -123,7 +123,7 @@ const HomePage = ({ onLogout }) => {
                         >
                           {section.title}
                           <span className="completion-status">
-                            {isCompleted(chapterIndex + 1, sectionIndex + 1) ? '(完了)' : ''}
+                            {isCompleted(chapterIndex + 1, sectionIndex + 1) ? '(済)' : ''}
                           </span>
                         </Link>
                       </li>
