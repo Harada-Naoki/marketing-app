@@ -86,17 +86,19 @@ input[type="password"] {
 }
 
 .content-section {
-  background-color: #d8f7d0;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  padding: 2rem;
-  margin-top: 2rem;
+  padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
 }
 
 .content-title {
-  font-size: 1.5rem;
-  color: green;
-  margin-bottom: 1.5rem;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
 }
 
 .content-title::before {
@@ -104,8 +106,9 @@ input[type="password"] {
   margin-right: 0.5rem;
 }
 
+
 .content-navigation {
-  margin-bottom: 2rem;
+  font-family: 'Arial', sans-serif;
 }
 
 .content-list {
@@ -114,50 +117,102 @@ input[type="password"] {
 }
 
 .content-item {
-  margin-bottom: 1rem;
-  list-style: none;
+  margin-bottom: 10px;
 }
 
-.content-item ul {
-  padding: 0;
+.Collapsible__contentInner ul {
+  list-style: none;
+  padding: inherit;
 }
+
 
 .collapsible-trigger {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
+  background-color: #e9ecef;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
   cursor: pointer;
-  padding: 10px;
-  background: #2eb32e;
-  color: white;
-  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  color: #333;
+}
+
+.collapsible-trigger:hover {
+  background-color: #d0d4d9;
 }
 
 .chevron-icon {
-  font-size: 20px;
-  margin-left: 10px;
+  transition: transform 0.3s ease;
 }
 
+.collapsible-trigger[aria-expanded="true"] .chevron-icon {
+  transform: rotate(180deg);
+}
 
 .content-link {
   display: block;
-  text-align: center;
-  color: gray;
+  padding: 10px 15px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  color: #495057;
   text-decoration: none;
-  font-size: 1.1rem;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border: 1px solid gray;
+  transition: background-color 0.3s ease, color 0.3s ease;
   border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
-.content-link:hover {
-  background-color: gray;
+.content-link.completed {
+  background-color: #727272;
   color: #ffffff;
 }
+
+.content-link.completed:hover {
+  background-color: #666666;
+  color: #000000;
+}
+
+.content-link.incomplete {
+  background-color: #ffffff;
+  color: #495057;
+}
+
+.content-link.incomplete:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.completion-status {
+  font-size: 0.8em;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* アニメーション効果 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.Collapsible__contentInner {
+  animation: fadeIn 0.3s ease-out;
+  border-radius: 0 0 4px 4px;
+}
+
+/* 各章の背景色を変える */
+.content-item:nth-child(3n+1) .collapsible-trigger {
+  background-color: #e3f2fd;
+}
+
+.content-item:nth-child(3n+2) .collapsible-trigger {
+  background-color: #e8f5e9;
+}
+
+.content-item:nth-child(3n+3) .collapsible-trigger {
+  background-color: #fff3e0;
+}
+
 
 /* 学習進捗 */
 /* 全体のコンテナ */
@@ -181,6 +236,30 @@ input[type="password"] {
 
 .progress-title::before {
   content: "📚";
+  margin-right: 0.5rem;
+}
+
+.progress-chapter {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3730a3;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.progress-item-container:nth-child(3n+1) .progress-chapter::before {
+  content: "📘";
+  margin-right: 0.5rem;
+}
+
+.progress-item-container:nth-child(3n+2) .progress-chapter::before {
+  content: "📗";
+  margin-right: 0.5rem;
+}
+
+.progress-item-container:nth-child(3n+3) .progress-chapter::before {
+  content: "📙";
   margin-right: 0.5rem;
 }
 

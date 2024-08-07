@@ -28,7 +28,6 @@ const ProgressTracker = () => {
     const fetchProgress = async () => {
       try {
         const response = await apiRequest('/api/progress/status');
-        console.log('API Response:', response.data); // デバッグ用ログ
 
         // チャプターの進行状況をソート
         const sortedProgress = response.data.progress.sort((a, b) => {
@@ -69,7 +68,7 @@ const ProgressTracker = () => {
         {Object.keys(groupedProgress).map((prefix) => (
           <li key={prefix} className='progress-item-container'>
             <div
-              className='progress-title'
+              className='progress-chapter'
               onClick={() => handleToggle(prefix)}
             >
               第{prefix}章

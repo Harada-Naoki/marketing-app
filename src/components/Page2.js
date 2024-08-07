@@ -7,9 +7,9 @@ import QuizQuestion from '../components/QuizQuestion';
 import { BookOpen } from 'lucide-react';
 
 // フックの前にチャプターデータをロード
-const chapterData = Array.from({ length: 7 }, (_, i) => require(`../data/chapter1/chapter1_${i + 1}.js`));
+const chapterData = Array.from({ length: 2 }, (_, i) => require(`../data/chapter2/chapter2_${i + 1}.js`));
 
-function Page1() {
+function Page2() {
   const { chapterId } = useParams();
   const chapterIndex = parseInt(chapterId, 10) - 1;
   const navigate = useNavigate();
@@ -303,11 +303,11 @@ function Page1() {
       )}
       
       <div className="links-container">
-        <Link to={`/marketing-app/Page1/${getNextChapterId(chapterId)}`}>次の章へ</Link>
+        <Link to={`/marketing-app/Page2/${getNextChapterId(chapterId)}`}>次の章へ</Link>
         <Link to="/">ホームに戻る</Link>  
       </div>
     </div>
   );
 }
 
-export default Page1;
+export default Page2;
