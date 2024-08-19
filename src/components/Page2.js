@@ -25,63 +25,107 @@ function Page2() {
   const [startTime, setStartTime] = useState(Date.now());
   const [inactiveStartTime, setInactiveStartTime] = useState(null);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const chatContainerRef = useRef(null);
   const inactivityTimer = useRef(null);
+  const hasLoadedProgress = useRef(false); // 進捗がロードされたかどうかを追跡するフラグ
 
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
-  const saveStudyTime = useCallback(async (time) => {
-    try {
-      await apiRequest('/api/progress/update', {
-        method: 'POST',
-        data: {
-          chapterId: chapterId,
-          studyTime: time
-        }
-      });
-    } catch (error) {
-      console.error('Error saving study time', error);
-    }
-  }, [chapterId]);
-
-  const completeChapter = useCallback(async () => {
+  const saveProgress = useCallback(async (options = {}) => {
+    const { updateStartTime = false } = options;
     try {
       const endTime = Date.now();
       const elapsed = Math.floor((endTime - startTime) / 1000);
       const totalStudyTime = studyTime + elapsed;
-      await saveStudyTime(totalStudyTime);
 
       await apiRequest('/api/progress/update', {
         method: 'POST',
         data: {
           chapterId: chapterId,
-          completed: true,
-          studyTime: totalStudyTime
+          visibleStep: visibleStep,
+          quizStarted: quizStarted,
+          currentQuestionIndex: currentQuestionIndex,
+          score: score,
+          studyTime: totalStudyTime,
+          completed: options.completed || false,
         }
       });
 
-      if (chapterIndex < CHAPTERS_COUNT - 1) {
-        const nextChapterId = `1_${chapterIndex + 2}`;
-        navigate(`/marketing-app/Page1/${nextChapterId}`);
-        window.location.reload();
-      } else {
-        navigate('/');
+      if (updateStartTime) {
+        setStartTime(Date.now());
       }
+    } catch (error) {
+      console.error('Error saving progress', error);
+    }
+  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
+
+  const completeChapter = useCallback(async () => {
+    try {
+      await saveProgress({ completed: true });
+      setShowResults(true);  // 完了後に結果表示画面に遷移
     } catch (error) {
       console.error('Error completing chapter', error);
     }
-  }, [chapterId, chapterIndex, navigate, saveStudyTime, startTime, studyTime]);
+  }, [saveProgress]);
+
+  const navigateToNextChapter = useCallback(() => {
+    const nextChapterId = `2_${chapterIndex + 2}`;
+    if (chapterIndex < CHAPTERS_COUNT - 1) {
+      navigate(`/marketing-app/Page2/${nextChapterId}`);
+      window.location.reload();
+    } else {
+      navigate('/');
+    }
+  }, [chapterIndex, navigate]);
+
+  const navigateToHome = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
+  const loadProgress = useCallback(async () => {
+    try {
+      const response = await apiRequest(`/api/progress/${chapterId}`, {
+        method: 'GET'
+      });
+
+      if (response.data) {
+        setVisibleStep(response.data.visibleStep);
+        setQuizStarted(response.data.quizStarted);
+        setCurrentQuestionIndex(response.data.currentQuestionIndex);
+        setScore(response.data.score);
+        setStudyTime(response.data.studyTime);
+
+        // チャプターが完了している場合は結果画面を表示
+        if (response.data.completed) {
+          setShowResults(true); // 完了状態に基づいて結果画面を表示
+        }
+      }
+
+      setIsLoading(false); // ローディング完了
+    } catch (error) {
+      console.error('Error loading progress', error);
+      setIsLoading(false);
+    }
+  }, [chapterId]);
+
+  useEffect(() => {
+    loadProgress();
+  }, [loadProgress]);
 
   useEffect(() => {
     if (!isValidChapter) {
-      navigate('/');
+      navigate('/'); // navigateが依存関係に含まれている必要があります
       return;
     }
 
     const handleInactivity = () => {
       setInactiveStartTime(Date.now());
+      if (hasLoadedProgress.current) { // 進捗がロードされている場合のみ保存を行う
+        saveProgress();
+      }
     };
 
     const resetInactivityTimer = () => {
@@ -117,6 +161,8 @@ function Page2() {
       window.addEventListener(event, resetInactivityTimer);
     });
 
+    const hasLoaded = hasLoadedProgress.current; // キャプチャしておく
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
@@ -129,11 +175,11 @@ function Page2() {
         clearTimeout(inactivityTimer.current);
       }
 
-      const endTime = Date.now();
-      const elapsed = Math.floor((endTime - startTime) / 1000);
-      saveStudyTime(studyTime + elapsed);
+      if (hasLoaded) { // キャプチャした値を使用
+        saveProgress();
+      }
     };
-  }, [isValidChapter, navigate, startTime, studyTime, inactiveStartTime, saveStudyTime]);
+  }, [isValidChapter, startTime, studyTime, inactiveStartTime, saveProgress, navigate]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -183,10 +229,12 @@ function Page2() {
     if (visibleStep < chapter.content.length - 1) {
       setVisibleStep(prev => prev + 1);
       setAllImagesLoaded(false);
+      saveProgress({ updateStartTime: true });
     } else {
       setQuizStarted(true);
+      saveProgress({ updateStartTime: true });
     }
-  }, [visibleStep, chapter]);
+  }, [visibleStep, chapter, saveProgress]);
 
   const handleQuizAnswer = useCallback((selectedAnswer) => {
     const currentQuestion = chapter.quizQuestions[currentQuestionIndex];
@@ -196,7 +244,8 @@ function Page2() {
     if (correct) {
       setScore(prev => prev + 1);
     }
-  }, [chapter, currentQuestionIndex]);
+    saveProgress();
+  }, [chapter, currentQuestionIndex, saveProgress]);
 
   const nextQuestion = useCallback(() => {
     setShowFeedback(false);
@@ -205,9 +254,25 @@ function Page2() {
     } else {
       setShowResults(true);
     }
-  }, [currentQuestionIndex, chapter]);
+    saveProgress();
+  }, [currentQuestionIndex, chapter, saveProgress]);
+
+  const resetQuiz = useCallback(async () => {
+    try {
+      await saveProgress();
+
+      setScore(0);
+      setCurrentQuestionIndex(0);
+      setShowResults(false); // 結果画面を閉じる
+    } catch (error) {
+      console.error('Error resetting quiz', error);
+    }
+  }, [saveProgress]);
+
+  
 
   if (!isValidChapter) return null;
+  if (isLoading) return <div>Loading...</div>;
 
   const { title, chapterOverview, content, quizQuestions } = chapter;
   const progressPercentage = ((visibleStep + 1) / content.length) * 100;
@@ -219,7 +284,7 @@ function Page2() {
           <BookOpen className="book-icon" size={50} />
           <h1 className="main-title">{title}</h1>
         </div>
-      
+
         {visibleStep === 0 && (
           <div className="overview-container">
             <h2 className="overview-title">チャプター概要</h2>
@@ -227,11 +292,11 @@ function Page2() {
           </div>
         )}
       </div>
-      
+
       <div className="progress-bar-container">
         <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
       </div>
-      
+
       <div className="chat-container" ref={chatContainerRef}>
         <div className="chat-content">
           {content.slice(0, visibleStep + 1).map((item, index) => (
@@ -259,6 +324,9 @@ function Page2() {
               completeChapter={completeChapter}
               showResults={showResults}
               setShowResults={setShowResults}
+              navigateToNextChapter={navigateToNextChapter}
+              navigateToHome={navigateToHome}
+              resetQuiz={resetQuiz} 
             />
           )}
         </div>
@@ -272,12 +340,11 @@ function Page2() {
         </div>
       )}
 
-      <div className="links-container">
-        {/* {chapterIndex < CHAPTERS_COUNT - 1 && (
-          <Link to={`/marketing-app/Page1/1_${chapterIndex + 2}`}>次の章へ</Link>
-        )} */}
-        <Link to="/">ホームに戻る</Link>  
-      </div>
+      {!showResults && (
+        <div className="links-container">
+         <Link to="/">ホームに戻る</Link>
+        </div>
+    )}
     </div>
   );
 }

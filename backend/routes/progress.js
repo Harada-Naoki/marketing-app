@@ -69,8 +69,8 @@ router.get('/status', authenticateToken, async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    console.log('User progress data:', user.progress); // デバッグ用ログ
-    console.log('Total study time:', user.totalStudyTime); // デバッグ用ログ
+    // console.log('User progress data:', user.progress); 
+    // console.log('Total study time:', user.totalStudyTime); 
 
     res.json({
       progress: user.progress,

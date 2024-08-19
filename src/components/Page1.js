@@ -117,13 +117,13 @@ function Page1() {
 
   useEffect(() => {
     if (!isValidChapter) {
-      navigate('/'); // navigateが依存関係に含まれている必要があります
+      navigate('/'); 
       return;
     }
 
     const handleInactivity = () => {
       setInactiveStartTime(Date.now());
-      if (hasLoadedProgress.current) { // 進捗がロードされている場合のみ保存を行う
+      if (hasLoadedProgress.current) { 
         saveProgress();
       }
     };
@@ -161,7 +161,7 @@ function Page1() {
       window.addEventListener(event, resetInactivityTimer);
     });
 
-    const hasLoaded = hasLoadedProgress.current; // キャプチャしておく
+    const hasLoaded = hasLoadedProgress.current; 
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -175,7 +175,7 @@ function Page1() {
         clearTimeout(inactivityTimer.current);
       }
 
-      if (hasLoaded) { // キャプチャした値を使用
+      if (hasLoaded) { 
         saveProgress();
       }
     };

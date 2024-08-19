@@ -41,7 +41,7 @@ const ProgressTracker = () => {
     const fetchProgress = async () => {
       try {
         const response = await apiRequest('/api/progress/status');
-        console.log('API response:', response);
+        // console.log('API response:', response);
 
         if (response.data && Array.isArray(response.data.progress)) {
           // 同じ chapterId の進捗をフィルタリング
