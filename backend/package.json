@@ -17,5 +17,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "mysql2": "^3.10.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
