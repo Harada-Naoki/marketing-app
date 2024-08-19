@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import apiRequest from './utils/apiRequest'; // apiRequest を使用する場合
+import apiRequest from './utils/apiRequest'; 
 import './App.css';
 
 const LoginForm = () => {

@@ -29,7 +29,7 @@ const apiRequest = async (url, options = {}) => {
     });
     return response;
   } catch (error) {
-    console.error('Initial request error:', error); // デバッグ用ログ
+    console.error('Initial request error:', error.response?.data || error.message);
 
     if (error.response && error.response.status === 403) {
       token = await refreshAccessToken(refreshToken);
@@ -46,10 +46,11 @@ const apiRequest = async (url, options = {}) => {
           });
           return response;
         } catch (retryError) {
-          console.error('Retry request error:', retryError); // デバッグ用ログ
+          console.error('Retry request error:', retryError.response?.data || retryError.message);
           throw retryError;
         }
       } else {
+        console.error('Token refresh failed');
         window.location.href = '/marketing-app/login';
       }
     } else {
@@ -59,6 +60,3 @@ const apiRequest = async (url, options = {}) => {
 };
 
 export default apiRequest;
-
-
-

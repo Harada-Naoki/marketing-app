@@ -5,7 +5,7 @@ import Collapsible from 'react-collapsible';
 import apiRequest from './utils/apiRequest';
 import './App.css';
 import Page1 from './components/Page1';
-import Page2 from './components/Page2';  // 新しく追加
+import Page2 from './components/Page2';  
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ProgressTracker from './ProgressTracker';
@@ -56,7 +56,6 @@ const HomePage = ({ onLogout }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [progress, setProgress] = useState([]);
 
-  // 進捗状況を取得
   useEffect(() => {
     const fetchProgress = async () => {
       try {
@@ -79,16 +78,28 @@ const HomePage = ({ onLogout }) => {
     fetchProgress();
   }, []);
 
-  // チャプターのトグル
   const handleToggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  // 完了しているかどうかを判定
-  const isCompleted = (chapterPrefix, sectionSuffix) => {
+  // const isCompleted = (chapterPrefix, sectionSuffix) => {
+  //   const chapterId = `${chapterPrefix}_${sectionSuffix}`;
+  //   const progressItem = progress.find(item => item.chapterId === chapterId);
+  //   return progressItem && progressItem.completed;
+  // };
+
+  const getProgress = (chapterPrefix, sectionSuffix) => {
     const chapterId = `${chapterPrefix}_${sectionSuffix}`;
-    const progressItem = progress.find(item => item.chapterId === chapterId);
-    return progressItem && progressItem.completed;
+    return (
+      progress.find(item => item.chapterId === chapterId) || {
+        visibleStep: 0,
+        quizStarted: false,
+        currentQuestionIndex: 0,
+        score: 0,
+        completed: false,
+        studyTime: 0
+      }
+    );
   };
 
   return (
@@ -113,21 +124,27 @@ const HomePage = ({ onLogout }) => {
                 </div>
                 <Collapsible open={activeIndex === chapterIndex}>
                   <ul>
-                    {chapter.sections.map((section, sectionIndex) => (
-                      <li className="content-item" key={sectionIndex}>
-                        <Link
-                          to={`/marketing-app/Page${chapterIndex + 1}/${section.chapterId}`}
-                          className={`content-link ${
-                            isCompleted(chapterIndex + 1, sectionIndex + 1) ? 'completed' : 'incomplete'
-                          }`}
-                        >
-                          {section.title}
-                          <span className="completion-status">
-                            {isCompleted(chapterIndex + 1, sectionIndex + 1) ? '(済)' : ''}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
+                    {chapter.sections.map((section, sectionIndex) => {
+                      const sectionProgress = getProgress(chapterIndex + 1, sectionIndex + 1);
+                      return (
+                        <li className="content-item" key={sectionIndex}>
+                          <Link
+                            to={`/marketing-app/Page${chapterIndex + 1}/${section.chapterId}`}
+                            className={`content-link ${
+                              sectionProgress && sectionProgress.completed ? 'completed' : 'incomplete'
+                            }`}
+                          >
+                            {section.title}
+                            <span className="completion-status">
+                              {/* {sectionProgress.completed ? '(済)' : 
+                               sectionProgress.quizStarted ? `(クイズ中 ${sectionProgress.currentQuestionIndex + 1}/${chapter.sections[sectionIndex].quizQuestions?.length || 0})` :
+                               sectionProgress.visibleStep > 0 ? `(${sectionProgress.visibleStep}/${chapter.sections[sectionIndex].content?.length || 0})` : ''} */}
+                               {sectionProgress.completed ? '(済)' : ''}
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </Collapsible>
               </li>
@@ -142,6 +159,7 @@ const HomePage = ({ onLogout }) => {
   );
 };
 
+
 // Appコンポーネント
 const App = () => {
   const handleLogout = () => {
@@ -155,7 +173,7 @@ const App = () => {
       <Routes>
         <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
-        <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> {/* 新しいルートを追加 */}
+        <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> 
         <Route path="/marketing-app/login" element={<LoginForm />} />
         <Route path="/marketing-app/register" element={<RegisterForm />} />
         <Route path="*" element={<Navigate to="/marketing-app" />} />

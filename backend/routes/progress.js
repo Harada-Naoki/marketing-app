@@ -5,44 +5,107 @@ const authenticateToken = require('../middleware/authenticateToken');
 
 // 進捗を更新するエンドポイント
 router.post('/update', authenticateToken, async (req, res) => {
-  const { chapterId, completed, studyTime } = req.body;
+  const { chapterId, visibleStep, quizStarted, currentQuestionIndex, score, completed, studyTime } = req.body;
   try {
     const user = await User.findById(req.user.id);
-    const progressIndex = user.progress.findIndex(p => p.chapterId === chapterId);
-
-    if (progressIndex !== -1) {
-      // 既存の進捗がある場合
-      user.progress[progressIndex].completed = completed !== undefined ? completed : user.progress[progressIndex].completed;
-      user.progress[progressIndex].studyTime += studyTime;
-    } else {
-      // 新しい進捗を追加する場合
-      user.progress.push({ chapterId, completed: completed !== undefined ? completed : false, studyTime });
+    if (!user) {
+      return res.status(404).send('User not found');
     }
 
-    user.totalStudyTime += studyTime;
+    // 同じ chapterId を持つ進捗をすべて取得
+    let progressItems = user.progress.filter(p => p.chapterId === chapterId);
+
+    if (progressItems.length > 1) {
+      // visibleStep が少ない進捗を削除
+      const minVisibleStep = Math.min(...progressItems.map(p => p.visibleStep));
+      user.progress = user.progress.filter(p => !(p.chapterId === chapterId && p.visibleStep === minVisibleStep));
+      progressItems = user.progress.filter(p => p.chapterId === chapterId); // 削除後に再取得
+    }
+
+    // 既存の進捗を取得または新しい進捗を追加
+    let progress = progressItems[0];
+    if (!progress) {
+      // 新しい進捗を追加する場合
+      progress = { chapterId, visibleStep: 0, quizStarted: false, currentQuestionIndex: 0, score: 0, completed: false, studyTime: 0 };
+      user.progress.push(progress);
+    }
+
+    // 前の studyTime の保存
+    const previousStudyTime = progress.studyTime;
+
+    // 進捗を更新
+    progress.visibleStep = visibleStep !== undefined ? visibleStep : progress.visibleStep;
+    progress.quizStarted = quizStarted !== undefined ? quizStarted : progress.quizStarted;
+    progress.currentQuestionIndex = currentQuestionIndex !== undefined ? currentQuestionIndex : progress.currentQuestionIndex;
+    progress.score = score !== undefined ? score : progress.score;
+
+    // `completed` がすでに `true` である場合は、`false` に戻さない
+    if (!progress.completed) {
+      progress.completed = completed !== undefined ? completed : progress.completed;
+    }
+
+    // studyTime の修正
+    const newStudyTime = Math.max(studyTime - previousStudyTime, 0);
+    progress.studyTime = previousStudyTime + newStudyTime;
+
+    // 全体の totalStudyTime を更新
+    user.totalStudyTime += newStudyTime;
+
     await user.save();
 
     res.status(200).send('Progress updated');
   } catch (error) {
-    console.error('Error updating progress:', error); // 追加: エラーログの詳細を出力
+    console.error('Error updating progress:', error);
     res.status(500).send('Error updating progress');
   }
 });
 
-// 進捗を取得するエンドポイント
+
+// 全ての進捗を取得するエンドポイント
 router.get('/status', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('progress totalStudyTime');
-    res.json(user);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    console.log('User progress data:', user.progress); // デバッグ用ログ
+    console.log('Total study time:', user.totalStudyTime); // デバッグ用ログ
+
+    res.json({
+      progress: user.progress,
+      totalStudyTime: user.totalStudyTime
+    });
   } catch (error) {
-    console.error('Error fetching progress:', error); // 追加: エラーログの詳細を出力
+    console.error('Error fetching progress:', error);
+    res.status(500).send('Error fetching progress');
+  }
+});
+
+// 特定のチャプターの進捗を取得するエンドポイント
+router.get('/:chapterId', authenticateToken, async (req, res) => {
+  const { chapterId } = req.params;
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const progress = user.progress.find(p => p.chapterId === chapterId) || {
+      chapterId,
+      visibleStep: 0,
+      quizStarted: false,
+      currentQuestionIndex: 0,
+      score: 0,
+      completed: false,
+      studyTime: 0
+    };
+    res.json(progress);
+  } catch (error) {
+    console.error('Error fetching progress:', error);
     res.status(500).send('Error fetching progress');
   }
 });
 
 module.exports = router;
-
-
-
-
 

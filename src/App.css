@@ -598,7 +598,17 @@ input[type="password"] {
 }
 
 .quiz-container span {
-  color: red;
+  color: red; 
+  font-size: larger;
+}
+
+.correct {
+  color: red; 
+  font-size: larger;
+}
+
+.incorrect {
+  color: blue; 
   font-size: larger;
 }
 
@@ -641,7 +651,7 @@ input[type="password"] {
   cursor: pointer;
   width: 60%;
   display: block;
-  margin: 0 auto;
+  margin: 10px auto;
 }
 
 .next-button:hover {
