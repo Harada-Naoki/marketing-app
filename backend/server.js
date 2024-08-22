@@ -32,7 +32,9 @@ const allowedOrigins = ['https://marketing-app-steel.vercel.app'];
 // ミドルウェア
 // app.use(cors(corsOptions)); 
 app.use(cors({
-  origin: '*',
+  origin: '*', // 必要に応じて特定のオリジンに制限
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 許可するHTTPメソッド
+  allowedHeaders: ['Content-Type', 'Authorization'], // 許可するヘッダー
   optionsSuccessStatus: 200
 }));
 app.use(bodyParser.json());
