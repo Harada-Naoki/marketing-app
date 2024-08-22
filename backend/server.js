@@ -8,7 +8,6 @@ const authRoutes = require('./routes/auth');
 const progressRoutes = require('./routes/progress');
 const authenticateToken = require('./middleware/authenticateToken');
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -16,8 +15,22 @@ const PORT = process.env.PORT || 5000;
 console.log('MONGO_URI:', process.env.MONGO_URI);
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
+// CORS設定
+const allowedOrigins = ['https://marketing-app-steel.vercel.app'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200
+};
+
 // ミドルウェア
-app.use(cors()); // ここでCORSミドルウェアを追加
+app.use(cors(corsOptions)); // ここでCORSミドルウェアを設定
 app.use(bodyParser.json());
 
 // データベース接続
@@ -40,6 +53,3 @@ app.get('/protected', authenticateToken, (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-
-
