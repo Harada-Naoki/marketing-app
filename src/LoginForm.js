@@ -7,22 +7,25 @@ const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // 送信状態を追跡
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // 送信状態に設定
+    setError(''); // 以前のエラーメッセージをクリア
     try {
       const response = await apiRequest('/api/auth/login', {
         method: 'POST',
-        data: { username, password },
-        noAuth: true
+        data: { username, password }
       });
       localStorage.setItem('token', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
       navigate('/marketing-app');
     } catch (error) {
-      alert('Login error: ' + error.message);
       setError('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false); // 送信状態をリセット
     }
   };
 
@@ -53,7 +56,9 @@ const LoginForm = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       <p>Don't have an account? <Link to="/marketing-app/register">Register here</Link></p>
     </div>

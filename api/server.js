@@ -16,7 +16,9 @@ console.log('MONGO_URI:', process.env.MONGO_URI);
 console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 // CORS設定
-const allowedOrigins = ['https://marketing-app-steel.vercel.app'];
+// const allowedOrigins = ['https://marketing-app-steel.vercel.app'];
+const allowedOrigins = ['http://localhost:3000'];
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
