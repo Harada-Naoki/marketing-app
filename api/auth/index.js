@@ -1,8 +1,13 @@
 const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
+const connectDB = require('../../db');
+const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const router = express.Router();
+
+// MongoDBに接続
+connectDB();
 
 // リフレッシュトークンを保存するための仮のデータベース
 let refreshTokens = [];
@@ -82,5 +87,3 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
-
-

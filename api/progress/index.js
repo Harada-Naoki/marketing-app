@@ -1,7 +1,12 @@
 const express = require('express');
+const connectDB = require('../../db');
+const User = require('../../models/User');
+const authenticateToken = require('../../middleware/authenticateToken');
+
 const router = express.Router();
-const User = require('../models/User');
-const authenticateToken = require('../middleware/authenticateToken');
+
+// MongoDBに接続
+connectDB();
 
 // 進捗を更新するエンドポイント
 router.post('/update', authenticateToken, async (req, res) => {
@@ -60,7 +65,6 @@ router.post('/update', authenticateToken, async (req, res) => {
   }
 });
 
-
 // 全ての進捗を取得するエンドポイント
 router.get('/status', authenticateToken, async (req, res) => {
   try {
@@ -68,9 +72,6 @@ router.get('/status', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found');
     }
-
-    // console.log('User progress data:', user.progress); 
-    // console.log('Total study time:', user.totalStudyTime); 
 
     res.json({
       progress: user.progress,
@@ -108,4 +109,3 @@ router.get('/:chapterId', authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
-
