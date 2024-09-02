@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/auth/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/marketing-app/api/auth/(.*)",
+      "dest": "/api/auth/index.js"
+    }
+  ]
+}

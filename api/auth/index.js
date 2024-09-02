@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('../../models/User');
+const User = require('../models/User'); // modelsディレクトリがapi内にあるため相対パスを調整
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const router = express.Router();
+const app = express();
+app.use(express.json());
 
 // MongoDBに接続
 const connectDB = async () => {
@@ -26,7 +27,7 @@ connectDB();
 let refreshTokens = [];
 
 // ユーザー登録
-router.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   console.log('Received /register request:', req.body);
   try {
     const { username, password } = req.body;
@@ -60,7 +61,7 @@ router.post('/register', async (req, res) => {
 });
 
 // ユーザーログイン
-router.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   console.log('Received /login request:', req.body);
   try {
     const { username, password } = req.body;
@@ -98,7 +99,7 @@ router.post('/login', async (req, res) => {
 });
 
 // トークンのリフレッシュ
-router.post('/token', (req, res) => {
+app.post('/token', (req, res) => {
   console.log('Received /token request with token:', req.body.token);
   const { token } = req.body;
   if (!token) {
@@ -123,7 +124,7 @@ router.post('/token', (req, res) => {
 });
 
 // リフレッシュトークンの削除
-router.post('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
   console.log('Received /logout request with token:', req.body.token);
   const { token } = req.body;
   refreshTokens = refreshTokens.filter(t => t !== token);
@@ -131,4 +132,4 @@ router.post('/logout', (req, res) => {
   res.sendStatus(204);
 });
 
-module.exports = router;
+module.exports = app;
