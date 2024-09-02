@@ -82,12 +82,6 @@ const HomePage = ({ onLogout }) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  // const isCompleted = (chapterPrefix, sectionSuffix) => {
-  //   const chapterId = `${chapterPrefix}_${sectionSuffix}`;
-  //   const progressItem = progress.find(item => item.chapterId === chapterId);
-  //   return progressItem && progressItem.completed;
-  // };
-
   const getProgress = (chapterPrefix, sectionSuffix) => {
     const chapterId = `${chapterPrefix}_${sectionSuffix}`;
     return (
@@ -185,7 +179,7 @@ const App = () => {
 // AppWrapperコンポーネント
 const AppWrapper = () => {
   return (
-    <Router>
+    <Router basename="/marketing-app">
       <App />
     </Router>
   );
