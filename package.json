@@ -2,7 +2,7 @@
   "name": "marketing-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/marketing-app",
+  "homepage": "./",
   "dependencies": {
     "axios": "^1.7.2",
     "cors": "^2.8.5",
