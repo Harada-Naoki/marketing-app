@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/auth/index.js",
+      "src": "/marketing-app/api/auth/index.js",
       "use": "@vercel/node"
     }
   ],
