@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "./static/css/main.e7a437b0.css",
-    "main.js": "./static/js/main.d7521532.js",
-    "static/media/teacher.png": "./static/media/teacher.64d49cf84c378d08a4e1.png",
-    "static/media/student.png": "./static/media/student.e61fe051c3a49ce21d9c.png",
-    "static/media/marketing_5.png": "./static/media/marketing_5.059fbd17880a2fa1653d.png",
-    "static/media/marketing_6.png": "./static/media/marketing_6.ec2d3f079d6464d0fe1d.png",
-    "static/media/marketing_3.jpeg": "./static/media/marketing_3.21d61be26f1fb68de7ec.jpeg",
-    "static/media/marketing_4.jpeg": "./static/media/marketing_4.bd032011dcfd79629249.jpeg",
-    "static/media/marketing_1.jpeg": "./static/media/marketing_1.4561dc07741396e77b30.jpeg",
-    "static/media/marketing_2.jpeg": "./static/media/marketing_2.c7019df8ccc64b4c5894.jpeg",
-    "index.html": "./index.html",
-    "main.e7a437b0.css.map": "./static/css/main.e7a437b0.css.map",
-    "main.d7521532.js.map": "./static/js/main.d7521532.js.map"
+    "main.css": "/marketing-app/static/css/main.e7a437b0.css",
+    "main.js": "/marketing-app/static/js/main.297962b7.js",
+    "static/media/teacher.png": "/marketing-app/static/media/teacher.64d49cf84c378d08a4e1.png",
+    "static/media/student.png": "/marketing-app/static/media/student.e61fe051c3a49ce21d9c.png",
+    "static/media/marketing_5.png": "/marketing-app/static/media/marketing_5.059fbd17880a2fa1653d.png",
+    "static/media/marketing_6.png": "/marketing-app/static/media/marketing_6.ec2d3f079d6464d0fe1d.png",
+    "static/media/marketing_3.jpeg": "/marketing-app/static/media/marketing_3.21d61be26f1fb68de7ec.jpeg",
+    "static/media/marketing_4.jpeg": "/marketing-app/static/media/marketing_4.bd032011dcfd79629249.jpeg",
+    "static/media/marketing_1.jpeg": "/marketing-app/static/media/marketing_1.4561dc07741396e77b30.jpeg",
+    "static/media/marketing_2.jpeg": "/marketing-app/static/media/marketing_2.c7019df8ccc64b4c5894.jpeg",
+    "index.html": "/marketing-app/index.html",
+    "main.e7a437b0.css.map": "/marketing-app/static/css/main.e7a437b0.css.map",
+    "main.297962b7.js.map": "/marketing-app/static/js/main.297962b7.js.map"
   },
   "entrypoints": [
     "static/css/main.e7a437b0.css",
-    "static/js/main.d7521532.js"
+    "static/js/main.297962b7.js"
   ]
 }
