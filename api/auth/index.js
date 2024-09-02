@@ -7,11 +7,12 @@ const jwt = require('jsonwebtoken');
 const app = express();
 app.use(express.json());
 
-// リクエストログのミドルウェア
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Body:`, req.body);
-  next();
-});
+// CORSの設定
+app.use(cors({
+  origin: 'https://marketing-app-eight.vercel.app', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Authorization', 'Content-Type']
+}));
 
 // MongoDBに接続
 const connectDB = async () => {
@@ -136,15 +137,6 @@ app.post('/logout', (req, res) => {
   refreshTokens = refreshTokens.filter(t => t !== token);
   console.log('Token removed successfully');
   res.sendStatus(204);
-});
-
-// エラーハンドリングのミドルウェア
-app.use((err, req, res, next) => {
-  console.error(`[${new Date().toISOString()}] Error occurred during ${req.method} ${req.url}:`, {
-    message: err.message,
-    stack: err.stack
-  });
-  res.status(500).json({ message: 'An unexpected error occurred' });
 });
 
 module.exports = app;
