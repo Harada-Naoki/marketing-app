@@ -15,7 +15,7 @@ const isAuthenticated = () => !!localStorage.getItem('token');
 
 // ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/marketing-app/login" />;
+  return isAuthenticated() ? element : <Navigate to="/" />;
 };
 
 // chapterId を解析して prefix と suffix を取得
@@ -159,7 +159,7 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/marketing-app/login';
+    window.location.href = '/';
   };
 
   return (
@@ -168,7 +168,7 @@ const App = () => {
         <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
         <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> 
-        <Route path="/marketing-app/login" element={<LoginForm />} />
+        <Route path="/" element={<LoginForm />} />
         <Route path="/marketing-app/register" element={<RegisterForm />} />
         <Route path="*" element={<Navigate to="/marketing-app" />} />
       </Routes>
