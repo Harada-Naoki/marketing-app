@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
-      progress: [] // 空の進捗データで初期化
+      // progress は初期登録時に設定しない
     });
     await newUser.save();
 
@@ -30,7 +30,6 @@ exports.register = async (req, res) => {
     res.status(500).send('Error creating user');
   }
 };
-
 
 exports.login = async (req, res) => {
   try {
