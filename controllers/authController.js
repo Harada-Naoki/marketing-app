@@ -80,10 +80,5 @@ exports.logout = (req, res) => {
   const { token } = req.body;
   refreshTokens = refreshTokens.filter(t => t !== token);
 
-  // キャッシュ制御ヘッダーを追加して、クライアント側のキャッシュを防止
-  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.set('Pragma', 'no-cache');
-  res.set('Expires', '0');
-
   res.sendStatus(204); // No Content
 };
