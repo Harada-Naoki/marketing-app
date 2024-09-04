@@ -13,12 +13,15 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({
+      username,
+      password: hashedPassword,
+      progress: [] // 空の進捗データで初期化
+    });
     await newUser.save();
 
     const accessToken = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
     const refreshToken = jwt.sign({ id: newUser._id }, process.env.REFRESH_SECRET, { expiresIn: '30d' });
-    refreshTokens.push(refreshToken);
 
     res.set('Cache-Control', 'no-store');
     res.json({ accessToken, refreshToken });
@@ -27,6 +30,7 @@ exports.register = async (req, res) => {
     res.status(500).send('Error creating user');
   }
 };
+
 
 exports.login = async (req, res) => {
   try {
