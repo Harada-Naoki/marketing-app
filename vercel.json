@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/marketing-app/(.*)", 
+        "destination": "/marketing-app/index.html"
+      }
+    ]
+  }
+  
