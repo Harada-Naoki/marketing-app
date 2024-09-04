@@ -18,7 +18,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   progress: {
     type: [ProgressSchema],
-    default: [] // デフォルトで空配列に設定
+    default: undefined, // 登録時にprogressを設定しなくても良いようにする
   },
   totalStudyTime: { type: Number, default: 0 } // 総勉強時間（秒）
 });
@@ -27,4 +27,3 @@ const UserSchema = new Schema({
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
-
