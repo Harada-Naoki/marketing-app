@@ -1,12 +1,9 @@
 const express = require('express');
-const connectDB = require('../../db');
 const User = require('../../models/User');
 const authenticateToken = require('../../middleware/authenticateToken');
 
 const router = express.Router();
 
-// MongoDBに接続
-connectDB();
 
 // 進捗を更新するエンドポイント
 router.post('/update', authenticateToken, async (req, res) => {
