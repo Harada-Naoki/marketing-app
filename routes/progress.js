@@ -14,6 +14,11 @@ router.post('/update', authenticateToken, async (req, res) => {
       return res.status(404).send('User not found');
     }
 
+    // `progress`フィールドが存在しない場合に初期化
+    if (!user.progress) {
+      user.progress = [];
+    }
+
     // 同じ chapterId を持つ進捗をすべて取得
     let progressItems = user.progress.filter(p => p.chapterId === chapterId);
 
@@ -61,6 +66,7 @@ router.post('/update', authenticateToken, async (req, res) => {
     res.status(500).send('Error updating progress');
   }
 });
+
 
 // 全ての進捗を取得するエンドポイント
 router.get('/status', authenticateToken, async (req, res) => {
