@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const app = require('./api/auth/index.js'); // パスはプロジェクトの構成に合わせて変更してください
+const authRoutes = require('./routes/auth');
 
-const port = process.env.PORT || 5000;
+const app = express();
+app.use(express.json());
 
 // CORSの設定
 app.use(cors({
@@ -22,13 +23,16 @@ const connectDB = async () => {
     console.log('MongoDB connected successfully');
   } catch (err) {
     console.error('MongoDB connection error:', err.message);
-    process.exit(1); // DB接続に失敗した場合はプロセスを終了
+    process.exit(1);
   }
 };
 
 connectDB();
 
-// サーバーを起動
+// ルートの設定
+app.use('/api/auth', authRoutes);
+
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
