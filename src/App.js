@@ -15,7 +15,7 @@ const isAuthenticated = () => !!localStorage.getItem('token');
 
 // ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/marketing-app" />;
+  return isAuthenticated() ? element : <Navigate to="/" />;
 };
 
 // chapterId を解析して prefix と suffix を取得
@@ -159,7 +159,7 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/marketing-app';
+    window.location.href = '/';
   };
 
   return (

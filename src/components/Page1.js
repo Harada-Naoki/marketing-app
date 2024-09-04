@@ -77,7 +77,7 @@ function Page1() {
       navigate(`/marketing-app/Page1/${nextChapterId}`);
       window.location.reload();
     } else {
-      navigate('/');
+      navigate('/marketing-app');
     }
   }, [chapterIndex, navigate]);
 
@@ -117,7 +117,7 @@ function Page1() {
 
   useEffect(() => {
     if (!isValidChapter) {
-      navigate('/'); 
+      navigate('/marketing-app'); 
       return;
     }
 
