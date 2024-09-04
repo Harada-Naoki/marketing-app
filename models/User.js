@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // 進捗スキーマの定義
 const ProgressSchema = new Schema({
-  chapterId: { type: Schema.Types.ObjectId, ref: 'Chapter', required: true }, // 必須フィールド
+  chapterId: { type: String }, // 文字列型で、必須ではない
   visibleStep: { type: Number, default: 0 },
   quizStarted: { type: Boolean, default: false },
   currentQuestionIndex: { type: Number, default: 0 },
