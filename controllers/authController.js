@@ -20,8 +20,10 @@ exports.register = async (req, res) => {
     const refreshToken = jwt.sign({ id: newUser._id }, process.env.REFRESH_SECRET, { expiresIn: '30d' });
     refreshTokens.push(refreshToken);
 
+    res.set('Cache-Control', 'no-store');
     res.json({ accessToken, refreshToken });
   } catch (error) {
+    console.error('Error creating user:', error);
     res.status(500).send('Error creating user');
   }
 };
@@ -43,8 +45,10 @@ exports.login = async (req, res) => {
     const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, { expiresIn: '30d' });
     refreshTokens.push(refreshToken);
 
+    res.set('Cache-Control', 'no-store');
     res.json({ accessToken, refreshToken });
   } catch (error) {
+    console.error('Error logging in user:', error);
     res.status(500).send('Error logging in user');
   }
 };
@@ -52,18 +56,19 @@ exports.login = async (req, res) => {
 exports.token = (req, res) => {
   const { token } = req.body;
   if (!token) {
-    return res.sendStatus(401);
+    return res.sendStatus(401); // Unauthorized
   }
   if (!refreshTokens.includes(token)) {
-    return res.sendStatus(403);
+    return res.sendStatus(403); // Forbidden
   }
 
   jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
     if (err) {
-      return res.sendStatus(403);
+      return res.sendStatus(403); // Forbidden
     }
 
     const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    res.set('Cache-Control', 'no-store');
     res.json({ accessToken });
   });
 };
@@ -71,5 +76,11 @@ exports.token = (req, res) => {
 exports.logout = (req, res) => {
   const { token } = req.body;
   refreshTokens = refreshTokens.filter(t => t !== token);
-  res.sendStatus(204);
+
+  // キャッシュ制御ヘッダーを追加して、クライアント側のキャッシュを防止
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+
+  res.sendStatus(204); // No Content
 };
