@@ -82,7 +82,7 @@ function Page1() {
   }, [chapterIndex, navigate]);
 
   const navigateToHome = useCallback(() => {
-    navigate('/');
+    navigate('/marketing-app');
   }, [navigate]);
 
   const loadProgress = useCallback(async () => {
@@ -342,7 +342,7 @@ function Page1() {
 
       {!showResults && (
         <div className="links-container">
-         <Link to="/">ホームに戻る</Link>
+         <Link to="/marketing">ホームに戻る</Link>
         </div>
     )}
     </div>
