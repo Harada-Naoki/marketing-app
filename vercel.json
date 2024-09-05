@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/marketing-app",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/marketing-app/(.*)", 
