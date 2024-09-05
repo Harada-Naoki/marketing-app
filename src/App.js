@@ -13,17 +13,9 @@ import ProgressTracker from './ProgressTracker';
 // 認証チェック
 const isAuthenticated = () => !!localStorage.getItem('token');
 
+// ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      // トークンが存在しない場合は、ログアウト処理と同様にリダイレクト
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      window.location.href = '/'; // ルートパスにリダイレクト
-    }
-  }, []);
-
-  return isAuthenticated() ? element : null;
+  return isAuthenticated() ? element : <Navigate to="/" />;
 };
 
 // chapterId を解析して prefix と suffix を取得
@@ -173,7 +165,7 @@ const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
+        <Route path="/" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
         <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> 
         <Route path="/" element={<LoginForm />} />
