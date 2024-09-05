@@ -75,14 +75,14 @@ function Page2() {
     const nextChapterId = `2_${chapterIndex + 2}`;
     if (chapterIndex < CHAPTERS_COUNT - 1) {
       navigate(`/marketing-app/Page2/${nextChapterId}`);
-      window.location.reload();
+      // window.location.reload();
     } else {
-      navigate('/');
+      navigate('/marketing-app');
     }
   }, [chapterIndex, navigate]);
 
   const navigateToHome = useCallback(() => {
-    navigate('/');
+    navigate('/marketing-app');
   }, [navigate]);
 
   const loadProgress = useCallback(async () => {
@@ -101,6 +101,8 @@ function Page2() {
         // チャプターが完了している場合は結果画面を表示
         if (response.data.completed) {
           setShowResults(true); // 完了状態に基づいて結果画面を表示
+        } else {
+          setShowResults(false); // 完了していない場合は結果画面を非表示
         }
       }
 
@@ -117,7 +119,7 @@ function Page2() {
 
   useEffect(() => {
     if (!isValidChapter) {
-      navigate('/'); // navigateが依存関係に含まれている必要があります
+      navigate('/marketing-app'); // navigateが依存関係に含まれている必要があります
       return;
     }
 
@@ -342,7 +344,7 @@ function Page2() {
 
       {!showResults && (
         <div className="links-container">
-         <Link to="/">ホームに戻る</Link>
+         <Link to="/marketing">ホームに戻る</Link>
         </div>
     )}
     </div>
