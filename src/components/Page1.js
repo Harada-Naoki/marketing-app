@@ -265,13 +265,9 @@ function Page1() {
       // クイズの状態をリセット
       setScore(0);
       setCurrentQuestionIndex(0);
+      setShowFeedback(false);
       setShowResults(false);
-  
-      // 状態が確実に更新された後で `saveProgress` を呼び出す
-      await new Promise(resolve => setTimeout(resolve, 0)); // 状態が更新されるのを待つ
-  
-      // リセットされた状態をバックエンドに保存
-      await saveProgress();  
+      
     } catch (error) {
       console.error('Error resetting quiz', error);
     }
