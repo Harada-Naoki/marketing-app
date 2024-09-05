@@ -267,15 +267,16 @@ function Page1() {
       setCurrentQuestionIndex(0);
       setShowResults(false);
   
+      // 状態が確実に更新された後で `saveProgress` を呼び出す
+      await new Promise(resolve => setTimeout(resolve, 0)); // 状態が更新されるのを待つ
+  
       // リセットされた状態をバックエンドに保存
-      await saveProgress();  // ここでは特別なオプションを渡さない
+      await saveProgress();  
     } catch (error) {
       console.error('Error resetting quiz', error);
     }
   }, [saveProgress]);
-
   
-
   if (!isValidChapter) return null;
   if (isLoading) return <div>Loading...</div>;
 
