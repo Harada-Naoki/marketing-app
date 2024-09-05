@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import Collapsible from 'react-collapsible';
 import apiRequest from './utils/apiRequest';
@@ -161,7 +162,7 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    navigate('/'); 
+    navigate('/');  // '/' にリダイレクト
   };
 
 

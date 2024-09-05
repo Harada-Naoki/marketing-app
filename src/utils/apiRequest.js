@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -51,7 +52,7 @@ const apiRequest = async (url, options = {}) => {
         }
       } else {
         console.error('Token refresh failed');
-        window.location.href = '/marketing-app/login';
+        navigate('/');  
       }
     } else {
       throw error;
