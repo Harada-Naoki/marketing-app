@@ -264,6 +264,7 @@ function Page1() {
     try {
       await saveProgress();
 
+      setQuizStarted(false);
       setScore(0);
       setCurrentQuestionIndex(0);
       setShowResults(false); // 結果画面を閉じる
