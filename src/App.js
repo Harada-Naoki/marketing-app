@@ -156,11 +156,14 @@ const HomePage = ({ onLogout }) => {
 
 // Appコンポーネント
 const App = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/';
+    navigate('/'); 
   };
+
 
   return (
     <div className="App">
