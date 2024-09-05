@@ -101,6 +101,8 @@ function Page1() {
         // チャプターが完了している場合は結果画面を表示
         if (response.data.completed) {
           setShowResults(true); // 完了状態に基づいて結果画面を表示
+        } else {
+          setShowResults(false); // 完了していない場合は結果画面を非表示
         }
       }
 
@@ -110,6 +112,7 @@ function Page1() {
       setIsLoading(false);
     }
   }, [chapterId]);
+
 
   useEffect(() => {
     loadProgress();
