@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -14,7 +13,7 @@ const refreshAccessToken = async (refreshToken) => {
   }
 };
 
-const apiRequest = async (url, options = {}) => {
+const apiRequest = async (url, options = {}, navigate) => {
   let token = localStorage.getItem('token');
   const refreshToken = localStorage.getItem('refreshToken');
 
