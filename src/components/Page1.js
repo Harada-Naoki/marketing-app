@@ -75,7 +75,7 @@ function Page1() {
     const nextChapterId = `1_${chapterIndex + 2}`;
     if (chapterIndex < CHAPTERS_COUNT - 1) {
       navigate(`/marketing-app/Page1/${nextChapterId}`);
-      window.location.reload();
+      // window.location.reload();
     } else {
       navigate('/marketing-app');
     }
