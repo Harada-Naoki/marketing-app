@@ -13,9 +13,17 @@ import ProgressTracker from './ProgressTracker';
 // 認証チェック
 const isAuthenticated = () => !!localStorage.getItem('token');
 
-// ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/" />;
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      // トークンが存在しない場合は、ログアウト処理と同様にリダイレクト
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      window.location.href = '/'; // ルートパスにリダイレクト
+    }
+  }, []);
+
+  return isAuthenticated() ? element : null;
 };
 
 // chapterId を解析して prefix と suffix を取得
