@@ -165,7 +165,7 @@ const App = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
+        <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
         <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> 
         <Route path="/" element={<LoginForm />} />
