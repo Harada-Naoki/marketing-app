@@ -1,10 +1,3 @@
-import marketing_1 from '../../images/images1/images1_1/marketing_1.jpeg';
-import marketing_2 from '../../images/images1/images1_1/marketing_2.jpeg';
-import marketing_3 from '../../images/images1/images1_1/marketing_3.jpeg';
-import marketing_4 from '../../images/images1/images1_1/marketing_4.jpeg';
-import marketing_5 from '../../images/images1/images1_1/marketing_5.png';
-import marketing_6 from '../../images/images1/images1_1/marketing_6.png';
-
 export const title = "「マーケティング」ってどう考えればいいの？ - チャプター 2";
 
 export const chapterOverview = "このチャプターでは、マーケティングの基本概念、現代のデジタルマーケティング、そしてマーケティングの重要なモデルと法則について学びます。";
@@ -33,7 +26,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_1,
+    src: "/images/images1/images1_1/marketing_1.jpeg", 
     alt: "売れ続ける仕組みづくり",
   },
   {
@@ -55,7 +48,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_2,
+    src: "/images/images1/images1_1/marketing_2.jpeg", 
     alt: "買いたい気持ちづくり",
   },
   {
@@ -78,7 +71,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_3,
+    src: "/images/images1/images1_1/marketing_3.jpeg", 
     alt: "デジタル化",
   },
   {
@@ -125,7 +118,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_4,
+    src: "/images/images1/images1_1/marketing_4.jpeg", 
     alt: "AIDMA/AISAS",
   },
   {
@@ -147,7 +140,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_5,
+    src: "/images/images1/images1_1/marketing_5.png", 
     alt: "ファネル",
   },
   {
@@ -161,7 +154,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_6,
+    src: "/images/images1/images1_1/marketing_6.png", 
     alt: "パレートの法則",
   },
   {
