@@ -235,6 +235,7 @@ function Page1() {
       saveProgress({ updateStartTime: true });
     } else {
       setQuizStarted(true);
+      setShowFeedback(false);
       saveProgress({ updateStartTime: true });
     }
   }, [visibleStep, chapter, saveProgress]);
