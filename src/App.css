@@ -512,17 +512,17 @@ input[type="password"] {
   border-bottom: 10px solid transparent;
 }
 
-.chat-table {
+.chat-bubble.teacher table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.chat-table th, .chat-table td {
+.chat-bubble.teacher th, .chat-bubble.teacher td {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-.chat-table th {
+.chat-bubble.teacher th {
   background-color: #f2f2f2;
   text-align: left;
 }

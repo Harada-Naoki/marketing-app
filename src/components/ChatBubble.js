@@ -14,7 +14,7 @@ const ChatBubble = ({ sender, type, text, src, alt, tableData }) => {
       {type === "image" ? (
         <img src={src} alt={alt} className="image" />
       ) : type === "table" ? (
-        <table className="table">
+        <table>
           <thead>
             <tr>
               {tableData.headers.map((header, i) => (
