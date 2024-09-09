@@ -15,7 +15,7 @@ const ChatBubble = ({ sender, type, text, src, alt, tableData }) => {
         <img src={src} alt={alt} className="image" />
       ) : type === "table" ? (
         <table className="table">
-          {tableData.headers && ( // headersが存在する場合のみtheadを表示
+          {tableData.headers && ( 
             <thead>
               <tr>
                 {tableData.headers.map((header, i) => (
