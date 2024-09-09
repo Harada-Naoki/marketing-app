@@ -52,7 +52,7 @@ const RegisterForm = () => {
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled>Register</button>
       </form>
       <p>Already have an account? <Link to="/marketing-app/login">Login here</Link></p>
     </div>
