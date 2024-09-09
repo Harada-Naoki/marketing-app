@@ -1,3 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/marketing-app",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/marketing-app/(.*)", 
+      "destination": "/marketing-app/index.html"
+    }
+  ],
   "ignoreCommand": "./vercel-ignore-build-step.sh"
 }

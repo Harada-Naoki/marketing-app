@@ -106,43 +106,6 @@ export const content = [
   {
     sender: "teacher",
     text: "まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています：\n1. Attention（注意）: 顧客の注意を引く。\n2. Interest（興味）: 顧客に興味を持たせる。\n3. Desire（欲求）: 商品やサービスへの欲求を喚起する。\n4. Memory（記憶）: 顧客の記憶に残る。\n5. Action（行動）: 実際に購入や行動を起こす。",
-    text: (
-      <div>
-        <p>
-          まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています：
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>ステップ</th>
-              <th>説明</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Attention（注意）</td>
-              <td>顧客の注意を引く。</td>
-            </tr>
-            <tr>
-              <td>Interest（興味）</td>
-              <td>顧客に興味を持たせる。</td>
-            </tr>
-            <tr>
-              <td>Desire（欲求）</td>
-              <td>商品やサービスへの欲求を喚起する。</td>
-            </tr>
-            <tr>
-              <td>Memory（記憶）</td>
-              <td>顧客の記憶に残る。</td>
-            </tr>
-            <tr>
-              <td>Action（行動）</td>
-              <td>実際に購入や行動を起こす。</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    ),
   },
   {
     sender: "student",
@@ -150,43 +113,7 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: (
-      <div>
-        <p>
-          AISASモデルは、デジタル時代に合わせて進化したマーケティングモデルです。以下の5つのステップからなります：
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>ステップ</th>
-              <th>説明</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Attention（注意）</td>
-              <td>顧客の注意を引く。</td>
-            </tr>
-            <tr>
-              <td>Interest（興味）</td>
-              <td>顧客に興味を持たせる。</td>
-            </tr>
-            <tr>
-              <td>Search（検索）</td>
-              <td>顧客が情報を検索する。</td>
-            </tr>
-            <tr>
-              <td>Action（行動）</td>
-              <td>実際に購入や行動を起こす。</td>
-            </tr>
-            <tr>
-              <td>Share（共有）</td>
-              <td>購入後にSNSなどで体験を共有する。</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    ),
+    text: "AISASモデルは、デジタル時代に合わせて進化したマーケティングモデルです。以下の5つのステップからなります：\n1. Attention（注意）: 顧客の注意を引く。\n2. Interest（興味）: 顧客に興味を持たせる。\n3. Search（検索）: 顧客が情報を検索する。\n4. Action（行動）: 実際に購入や行動を起こす。\n5. Share（共有）: 購入後にSNSなどで体験を共有する。",
   },
   {
     sender: "teacher",
@@ -208,19 +135,7 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: (
-      <div>
-        <p>マーケティングファネルとは、顧客が商品を認知してから購入に至るまでの一連の段階を示すモデルです。以下の5つのステップで構成されています：</p>
-
-        <ul className="step-list">
-          <li><strong>1. 認知 (Attention)</strong>: 顧客がCMや看板広告、ポスターなどで商品を認知する段階です。</li>
-          <li><strong>2. 興味 (Interest)</strong>: 商品のことが気になり、商標に反応するようになる段階です。</li>
-          <li><strong>3. 欲求 (Desire)</strong>: 顧客が商品を購入したいと思う段階です。</li>
-          <li><strong>4. 記憶 (Memory)</strong>: 商品の良さや詳細を記憶する段階です。</li>
-          <li><strong>5. 行動 (Action)</strong>: 実際に商品を購入する段階です。</li>
-        </ul>
-      </div>
-    )
+    text: "マーケティングファネルとは、顧客が商品を認知してから購入に至るまでの一連の段階を示すモデルです。以下の5つのステップで構成されています：\n1. 認知 (Attention): 顧客がCMや看板広告、ポスターなどで商品を認知する段階です。\n2. 興味 (Interest): 商品のことが気になり、商標に反応するようになる段階です。\n3. 欲求 (Desire): 顧客が商品を購入したいと思う段階です。\n4. 記憶 (Memory): 商品の良さや詳細を記憶する段階です。\n5. 行動 (Action): 実際に商品を購入する段階です。",
   },
   {
     sender: "teacher",
@@ -234,16 +149,7 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: (
-      <div>
-        <p>パレートの法則とは、全体の結果の大部分が一部の要素によって生み出されるという現象を説明する法則です。マーケティングにおいては、顧客の2割が売上の8割を作るということを示しています：</p>
-
-        <ul className="step-list">
-          <li><strong>1. 顧客の2割が、全体の売上の8割を占める。</strong></li>
-          <li><strong>2. 残りの顧客の8割が、売上の2割を占める</strong></li>
-        </ul>
-      </div>
-    )
+    text: "パレートの法則とは、全体の結果の大部分が一部の要素によって生み出されるという現象を説明する法則です。マーケティングにおいては、顧客の2割が売上の8割を作るということを示しています。具体的には：\n1. 顧客の2割が、全体の売上の8割を占める。\n2. 残りの顧客の8割が、売上の2割を占める。",
   },
   {
     sender: "teacher",
