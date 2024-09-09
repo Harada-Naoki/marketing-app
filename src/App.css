@@ -515,6 +515,7 @@ input[type="password"] {
 .chat-bubble.teacher table {
   width: 100%;
   border-collapse: collapse;
+  margin: 10px;
 }
 
 .chat-bubble.teacher th, .chat-bubble.teacher td {

@@ -14,14 +14,16 @@ const ChatBubble = ({ sender, type, text, src, alt, tableData }) => {
       {type === "image" ? (
         <img src={src} alt={alt} className="image" />
       ) : type === "table" ? (
-        <table>
-          <thead>
-            <tr>
-              {tableData.headers.map((header, i) => (
-                <th key={i}>{header}</th>
-              ))}
-            </tr>
-          </thead>
+        <table className="table">
+          {tableData.headers && ( // headersが存在する場合のみtheadを表示
+            <thead>
+              <tr>
+                {tableData.headers.map((header, i) => (
+                  <th key={i}>{header}</th>
+                ))}
+              </tr>
+            </thead>
+          )}
           <tbody>
             {tableData.rows.map((row, i) => (
               <tr key={i}>
