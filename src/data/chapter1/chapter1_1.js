@@ -105,7 +105,21 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: "まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています：\n1. Attention（注意）: 顧客の注意を引く。\n2. Interest（興味）: 顧客に興味を持たせる。\n3. Desire（欲求）: 商品やサービスへの欲求を喚起する。\n4. Memory（記憶）: 顧客の記憶に残る。\n5. Action（行動）: 実際に購入や行動を起こす。",
+    text: "まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています。",
+  },
+  {
+    sender: "teacher",
+    type: "table",
+    tableData: {
+      headers: ["ステップ", "説明"],
+      rows: [
+        ["Attention（注意）", "顧客の注意を引く。"],
+        ["Interest（興味）", "顧客に興味を持たせる。"],
+        ["Desire（欲求）", "商品やサービスへの欲求を喚起する。"],
+        ["Memory（記憶）", "顧客の記憶に残る。"],
+        ["Action（行動）", "実際に購入や行動を起こす。"],
+      ],
+    },
   },
   {
     sender: "student",

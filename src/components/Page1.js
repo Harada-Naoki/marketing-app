@@ -306,7 +306,14 @@ function Page1() {
               {item.type === "sectionTitle" ? (
                 <h3 className="section-title">{item.text}</h3>
               ) : (
-                <ChatBubble sender={item.sender} type={item.type} text={item.text} src={item.src} alt={item.alt} />
+                <ChatBubble
+                sender={item.sender}
+                type={item.type}
+                text={item.text}
+                src={item.src}
+                alt={item.alt}
+                tableData={item.tableData}  
+              />
               )}
             </div>
           ))}
