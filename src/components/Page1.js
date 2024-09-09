@@ -262,12 +262,12 @@ function Page1() {
 
   const resetQuiz = useCallback(async () => {
     try {
-      await saveProgress();
-
+      // クイズの状態をリセット
       setScore(0);
       setCurrentQuestionIndex(0);
       setShowFeedback(false);
-      setShowResults(false); // 結果画面を閉じる
+      setShowResults(false);
+      
     } catch (error) {
       console.error('Error resetting quiz', error);
     }

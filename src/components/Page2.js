@@ -265,7 +265,6 @@ function Page2() {
 
       setScore(0);
       setCurrentQuestionIndex(0);
-      setShowFeedback(false);
       setShowResults(false); // 結果画面を閉じる
     } catch (error) {
       console.error('Error resetting quiz', error);
