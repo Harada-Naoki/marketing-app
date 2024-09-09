@@ -11,6 +11,5 @@
       "source": "/marketing-app/(.*)", 
       "destination": "/marketing-app/index.html"
     }
-  ],
-  "ignoreCommand": "./vercel-ignore-build-step.sh"
+  ]
 }
