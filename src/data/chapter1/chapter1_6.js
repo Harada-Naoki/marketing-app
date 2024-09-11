@@ -1,4 +1,4 @@
-export const title = "「マーケティング」ってどう考えればいいの？ - チャプター 6";
+export const title = "継続率と売上の関係は？";
 
 export const chapterOverview = "このチャプターでは、マーケティングの基本概念、現代のデジタルマーケティング、そしてマーケティングの重要なモデルと法則について学びます。";
 

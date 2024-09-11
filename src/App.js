@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import Collapsible from 'react-collapsible';
 import apiRequest from './utils/apiRequest';
+import KeepAlive from './utils/KeepAlive';
 import './App.css';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';  
@@ -162,12 +163,13 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    navigate('/');  // '/' にリダイレクト
+    navigate('/');  
   };
 
 
   return (
     <div className="App">
+      <KeepAlive />
       <Routes>
         <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
