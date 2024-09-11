@@ -22,6 +22,11 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/progress', progressRoutes);
 
+// キープアライブ用エンドポイントの追加
+app.get('/keepalive', (req, res) => {
+  res.status(200).send('Server is alive');
+});
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
