@@ -4,7 +4,7 @@ const KeepAlive = () => {
   useEffect(() => {
     // 一定時間ごとにリクエストを送る
     const intervalId = setInterval(() => {
-      fetch('https://your-backend-url.com/keepalive', {
+      fetch('https://marketing-app-rxkb.onrender.com/keepalive', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
