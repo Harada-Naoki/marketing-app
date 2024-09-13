@@ -33,7 +33,7 @@ const parseChapterId = (chapterId) => {
 const chapters = [
   {
     title: '第1章',
-    sections: Array.from({ length: 7 }, (_, sectionIndex) => {
+    sections: Array.from({ length: 20 }, (_, sectionIndex) => {
       const sectionData = require(`./data/chapter1/chapter1_${sectionIndex + 1}.js`);
       return {
         title: sectionData.title,
