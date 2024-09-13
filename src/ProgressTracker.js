@@ -19,6 +19,11 @@ const getProgressForChapter = (progress, chapterId) => {
 
 // サブカテゴリごとの勉強時間の合計を計算
 const calculateSectionStudyTime = (progress, subSections) => {
+  // subSections が存在する場合にのみ reduce を実行
+  if (!subSections || !Array.isArray(subSections)) {
+    return 0;
+  }
+
   return subSections.reduce((total, subSection) => {
     const subSectionProgress = getProgressForChapter(progress, subSection.chapterId);
     return subSectionProgress ? total + subSectionProgress.studyTime : total;
@@ -27,11 +32,17 @@ const calculateSectionStudyTime = (progress, subSections) => {
 
 // 章全体の勉強時間の合計を計算
 const calculateChapterStudyTime = (progress, sections) => {
+  // sections が存在する場合にのみ reduce を実行
+  if (!sections || !Array.isArray(sections)) {
+    return 0;
+  }
+
   return sections.reduce((total, section) => {
     const sectionStudyTime = calculateSectionStudyTime(progress, section.subSections);
     return total + sectionStudyTime;
   }, 0);
 };
+
 
 const ProgressTracker = () => {
   const [progress, setProgress] = useState([]);
