@@ -147,7 +147,7 @@ const HomePage = ({ onLogout }) => {
         {/* Navigation for Chapters */}
         <nav className="content-navigation">
           <ul className="content-list">
-            {chapters.map((chapter, chapterIndex) => (
+            {chapters.length > 0 && chapters.map((chapter, chapterIndex) => (
               <li className="content-item" key={chapterIndex}>
                 {/* Chapter Title (Collapsible Trigger) */}
                 <div
@@ -163,55 +163,59 @@ const HomePage = ({ onLogout }) => {
                 </div>
 
                 {/* Collapsible Sections under Chapter */}
-                <Collapsible open={activeIndex === chapterIndex}>
-                  <ul>
-                    {chapter.sections.map((section, sectionIndex) => (
-                      <li className="content-item" key={sectionIndex}>
-                        {/* Section Title (Collapsible Trigger for Subsections) */}
-                        <div
-                          className="collapsible-trigger"
-                          onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
-                        >
-                          {section.title}
-                          {activeSubIndex[chapterIndex] === sectionIndex ? (
-                            <FiChevronDown className="chevron-icon" />
-                          ) : (
-                            <FiChevronRight className="chevron-icon" />
+                {chapter.sections && chapter.sections.length > 0 && (
+                  <Collapsible open={activeIndex === chapterIndex}>
+                    <ul>
+                      {chapter.sections.map((section, sectionIndex) => (
+                        <li className="content-item" key={sectionIndex}>
+                          {/* Section Title (Collapsible Trigger for Subsections) */}
+                          <div
+                            className="collapsible-trigger"
+                            onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
+                          >
+                            {section.title}
+                            {activeSubIndex[chapterIndex] === sectionIndex ? (
+                              <FiChevronDown className="chevron-icon" />
+                            ) : (
+                              <FiChevronRight className="chevron-icon" />
+                            )}
+                          </div>
+
+                          {/* Collapsible Subsections under Section */}
+                          {section.subSections && section.subSections.length > 0 && (
+                            <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
+                              <ul>
+                                {section.subSections.map((subSection, subIndex) => {
+                                  // `chapterId` を `1_1` から `1_20` までの範囲で生成
+                                  const subSectionProgress = getProgress(
+                                    chapterIndex + 1,
+                                    subSection.chapterId.split('_')[1]
+                                  );
+
+                                  return (
+                                    <li className="content-item" key={subIndex}>
+                                      <Link
+                                        to={`/marketing-app/Page${chapterIndex + 1}/${subSection.chapterId}`}
+                                        className={`content-link ${
+                                          subSectionProgress.completed ? 'completed' : 'incomplete'
+                                        }`}
+                                      >
+                                        {subSection.title}
+                                        <span className="completion-status">
+                                          {subSectionProgress.completed ? '(済)' : ''}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </Collapsible>
                           )}
-                        </div>
-
-                        {/* Collapsible Subsections under Section */}
-                        <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
-                          <ul>
-                            {section.subSections.map((subSection, subIndex) => {
-                              // `chapterId` を `1_1` から `1_20` までの範囲で生成
-                              const subSectionProgress = getProgress(
-                                chapterIndex + 1,
-                                subSection.chapterId.split('_')[1]
-                              );
-
-                              return (
-                                <li className="content-item" key={subIndex}>
-                                  <Link
-                                    to={`/marketing-app/Page${chapterIndex + 1}/${subSection.chapterId}`}
-                                    className={`content-link ${
-                                      subSectionProgress.completed ? 'completed' : 'incomplete'
-                                    }`}
-                                  >
-                                    {subSection.title}
-                                    <span className="completion-status">
-                                      {subSectionProgress.completed ? '(済)' : ''}
-                                    </span>
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </Collapsible>
-                      </li>
-                    ))}
-                  </ul>
-                </Collapsible>
+                        </li>
+                      ))}
+                    </ul>
+                  </Collapsible>
+                )}
               </li>
             ))}
           </ul>
