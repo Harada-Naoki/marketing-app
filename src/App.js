@@ -228,9 +228,6 @@ const HomePage = ({ onLogout }) => {
   );
 };
 
-
-
-
 // Appコンポーネント
 const App = () => {
   const navigate = useNavigate();
