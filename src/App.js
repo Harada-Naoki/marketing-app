@@ -37,28 +37,28 @@ const chapters = [
       {
         title: 'デジタル時代のマーケティングの特性',
         subSections: Array.from({ length: 3 }, (_, subIndex) => ({
-          title: `第1_${subIndex + 1}節`,
+          title: sectionData.title,
           chapterId: `1_${subIndex + 1}`  // 1_1, 1_2, 1_3 のように生成
         }))
       },
       {
         title: '現状分析',
         subSections: Array.from({ length: 4 }, (_, subIndex) => ({
-          title: `第1_${subIndex + 4}節`,
+          title: sectionData.title,
           chapterId: `1_${subIndex + 4}`  // 1_4 から 1_7 まで
         }))
       },
       {
         title: 'リピート促進',
         subSections: Array.from({ length: 6 }, (_, subIndex) => ({
-          title: `第1_${subIndex + 8}節`,
+          title: sectionData.title,
           chapterId: `1_${subIndex + 8}`  // 1_8 から 1_13 まで
         }))
       },
       {
         title: '予算配分（LTV・CPA・CPO）',
         subSections: Array.from({ length: 7 }, (_, subIndex) => ({
-          title: `第1_${subIndex + 14}節`,
+          title: sectionData.title,
           chapterId: `1_${subIndex + 14}`  // 1_14 から 1_20 まで
         }))
       }
@@ -167,10 +167,10 @@ const HomePage = ({ onLogout }) => {
                   <Collapsible open={activeIndex === chapterIndex}>
                     <ul>
                       {chapter.sections.map((section, sectionIndex) => (
-                        <li className="content-item" key={sectionIndex}>
+                        <li className="content-item-sub" key={sectionIndex}>
                           {/* Section Title (Collapsible Trigger for Subsections) */}
                           <div
-                            className="collapsible-trigger"
+                            className="collapsible-trigger-sub"
                             onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
                           >
                             {section.title}
@@ -193,7 +193,7 @@ const HomePage = ({ onLogout }) => {
                                   );
 
                                   return (
-                                    <li className="content-item" key={subIndex}>
+                                    <li className="content-item-sub2" key={subIndex}>
                                       <Link
                                         to={`/marketing-app/Page${chapterIndex + 1}/${subSection.chapterId}`}
                                         className={`content-link ${
