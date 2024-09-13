@@ -38,28 +38,28 @@ const chapters = [
         title: 'デジタル時代のマーケティングの特性',
         subSections: Array.from({ length: 3 }, (_, subIndex) => ({
           title: `第1_${subIndex + 1}節`,
-          chapterId: `1_${subIndex + 1}`
+          chapterId: `1_${subIndex + 1}`  // 1_1, 1_2, 1_3 のように生成
         }))
       },
       {
         title: '現状分析',
         subSections: Array.from({ length: 4 }, (_, subIndex) => ({
           title: `第1_${subIndex + 4}節`,
-          chapterId: `1_${subIndex + 4}`
+          chapterId: `1_${subIndex + 4}`  // 1_4 から 1_7 まで
         }))
       },
       {
         title: 'リピート促進',
         subSections: Array.from({ length: 6 }, (_, subIndex) => ({
           title: `第1_${subIndex + 8}節`,
-          chapterId: `1_${subIndex + 8}`
+          chapterId: `1_${subIndex + 8}`  // 1_8 から 1_13 まで
         }))
       },
       {
         title: '予算配分（LTV・CPA・CPO）',
         subSections: Array.from({ length: 7 }, (_, subIndex) => ({
           title: `第1_${subIndex + 14}節`,
-          chapterId: `1_${subIndex + 14}`
+          chapterId: `1_${subIndex + 14}`  // 1_14 から 1_20 まで
         }))
       }
     ]
@@ -70,11 +70,12 @@ const chapters = [
       const sectionData = require(`./data/chapter2/chapter2_${sectionIndex + 1}.js`);
       return {
         title: sectionData.title,
-        chapterId: `2_${sectionIndex + 1}`
+        chapterId: `2_${sectionIndex + 1}`  // 2_1, 2_2
       };
     })
   }
 ];
+
 
 
 // HomePageコンポーネント
@@ -83,6 +84,7 @@ const HomePage = ({ onLogout }) => {
   const [activeSubIndex, setActiveSubIndex] = useState({});
   const [progress, setProgress] = useState([]);
 
+  // プログレスの取得と並び替え
   useEffect(() => {
     const fetchProgress = async () => {
       try {
@@ -105,40 +107,49 @@ const HomePage = ({ onLogout }) => {
     fetchProgress();
   }, []);
 
+  // チャプターの展開/折りたたみのトグル
   const handleToggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  // セクションの展開/折りたたみのトグル
   const handleSubToggle = (chapterIndex, sectionIndex) => {
     setActiveSubIndex((prev) => ({
       ...prev,
-      [chapterIndex]: prev[chapterIndex] === sectionIndex ? null : sectionIndex
+      [chapterIndex]: prev[chapterIndex] === sectionIndex ? null : sectionIndex,
     }));
   };
 
+  // プログレスの取得
   const getProgress = (chapterPrefix, sectionSuffix) => {
     const chapterId = `${chapterPrefix}_${sectionSuffix}`;
     return (
-      progress.find(item => item.chapterId === chapterId) || {
+      progress.find((item) => item.chapterId === chapterId) || {
         visibleStep: 0,
         quizStarted: false,
         currentQuestionIndex: 0,
         score: 0,
         completed: false,
-        studyTime: 0
+        studyTime: 0,
       }
     );
   };
 
   return (
     <div className="home-container">
+      {/* Progress Tracker Component */}
       <ProgressTracker />
+
+      {/* Main Content Section */}
       <div className="content-section">
         <h1 className="content-title">目次</h1>
+
+        {/* Navigation for Chapters */}
         <nav className="content-navigation">
           <ul className="content-list">
             {chapters.map((chapter, chapterIndex) => (
               <li className="content-item" key={chapterIndex}>
+                {/* Chapter Title (Collapsible Trigger) */}
                 <div
                   className="collapsible-trigger"
                   onClick={() => handleToggle(chapterIndex)}
@@ -150,10 +161,13 @@ const HomePage = ({ onLogout }) => {
                     <FiChevronRight className="chevron-icon" />
                   )}
                 </div>
+
+                {/* Collapsible Sections under Chapter */}
                 <Collapsible open={activeIndex === chapterIndex}>
                   <ul>
                     {chapter.sections.map((section, sectionIndex) => (
                       <li className="content-item" key={sectionIndex}>
+                        {/* Section Title (Collapsible Trigger for Subsections) */}
                         <div
                           className="collapsible-trigger"
                           onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
@@ -165,13 +179,17 @@ const HomePage = ({ onLogout }) => {
                             <FiChevronRight className="chevron-icon" />
                           )}
                         </div>
+
+                        {/* Collapsible Subsections under Section */}
                         <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
                           <ul>
                             {section.subSections.map((subSection, subIndex) => {
+                              // `chapterId` を `1_1` から `1_20` までの範囲で生成
                               const subSectionProgress = getProgress(
                                 chapterIndex + 1,
-                                `${sectionIndex + 1}_${subIndex + 1}`
+                                subSection.chapterId.split('_')[1]
                               );
+
                               return (
                                 <li className="content-item" key={subIndex}>
                                   <Link
@@ -199,12 +217,17 @@ const HomePage = ({ onLogout }) => {
           </ul>
         </nav>
       </div>
+
+      {/* Logout Button */}
       <div>
-        <button onClick={onLogout} className="logout-button">ログアウト</button>
+        <button onClick={onLogout} className="logout-button">
+          ログアウト
+        </button>
       </div>
     </div>
   );
 };
+
 
 
 
