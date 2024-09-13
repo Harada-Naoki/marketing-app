@@ -6,7 +6,7 @@ import ChatBubble from '../components/ChatBubble';
 import QuizQuestion from '../components/QuizQuestion';
 import { BookOpen } from 'lucide-react';
 
-const CHAPTERS_COUNT = 7;
+const CHAPTERS_COUNT = 20;
 const chapterData = Array.from({ length: CHAPTERS_COUNT }, (_, i) => require(`../data/chapter1/chapter1_${i + 1}.js`));
 
 function Page1() {

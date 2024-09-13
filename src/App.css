@@ -536,7 +536,7 @@ input[type="password"] {
 }
 
 .image {
-  max-width: 60%;
+  max-width: 90%;
   height: auto;
   border-radius: 10px;
   background: #f1f1f1;
