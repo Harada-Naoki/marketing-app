@@ -165,6 +165,7 @@ const HomePage = ({ onLogout }) => {
                   className="collapsible-trigger"
                   onClick={() => handleToggle(chapterIndex)}
                 >
+                  <span className="icon icon-chapter"></span>
                   {chapter.title}
                   {activeIndex === chapterIndex ? (
                     <FiChevronDown className="chevron-icon" />
@@ -184,6 +185,7 @@ const HomePage = ({ onLogout }) => {
                             className="collapsible-trigger-sub"
                             onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
                           >
+                            <span className="icon icon-section"></span>
                             {section.title}
                             {activeSubIndex[chapterIndex] === sectionIndex ? (
                               <FiChevronDown className="chevron-icon" />
@@ -211,6 +213,7 @@ const HomePage = ({ onLogout }) => {
                                           subSectionProgress.completed ? 'completed' : 'incomplete'
                                         }`}
                                       >
+                                        <span className="icon icon-page"></span>
                                         {subSection.title}
                                         <span className="completion-status">
                                           {subSectionProgress.completed ? '(済)' : ''}

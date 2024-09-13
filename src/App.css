@@ -9,6 +9,10 @@ body {
   height: 100vh;
 }
 
+ul li {
+  list-style: none;
+}
+
 /* フォーム */
 .form-container {
   background-color: #fff;
@@ -106,18 +110,8 @@ input[type="password"] {
   margin-right: 0.5rem;
 }
 
-
-.content-navigation {
-  font-family: 'Arial', sans-serif;
-}
-
 .content-navigation {
   font-family: 'Poppins', sans-serif;
-  max-width: 300px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 .content-list {
@@ -159,6 +153,7 @@ input[type="password"] {
   transition: all 0.3s;
   margin-top: 5px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -183,6 +178,10 @@ input[type="password"] {
 
 .content-link:hover {
   background-color: #dfe6e9;
+}
+
+.content-link.complete {
+  background-color: gray;
 }
 
 .completion-status {
