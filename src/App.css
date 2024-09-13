@@ -180,7 +180,7 @@ input[type="password"] {
   background-color: #dfe6e9;
 }
 
-.content-link.complete {
+.content-link.completed {
   background-color: gray;
 }
 
@@ -188,11 +188,6 @@ input[type="password"] {
   font-size: 0.8em;
   color: #00b894;
   margin-left: 5px;
-}
-
-.icon {
-  margin-right: 10px;
-  font-size: 1.2em;
 }
 
 /* アイコンのプレースホルダー */
