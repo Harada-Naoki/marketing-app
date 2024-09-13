@@ -102,7 +102,7 @@ const ProgressTracker = () => {
                   onClick={() => handleToggle(chapterIndex)}
                 >
                   {chapter.title}
-                  <span className='study-time'>
+                  <span className='study-time-chapter'>
                     章の合計勉強時間: {formatTime(chapterStudyTime)}
                   </span>
                   {activeChapter === chapterIndex ? (
@@ -123,7 +123,7 @@ const ProgressTracker = () => {
                             onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
                           >
                             {section.title}
-                            <span className='study-time'>
+                            <span className='study-time-section'>
                               合計勉強時間: {formatTime(sectionStudyTime)}
                             </span>
                             {activeSubIndex[chapterIndex] === sectionIndex ? (
