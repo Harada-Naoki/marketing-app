@@ -111,83 +111,95 @@ input[type="password"] {
   font-family: 'Arial', sans-serif;
 }
 
+.content-navigation {
+  font-family: 'Poppins', sans-serif;
+  max-width: 300px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
 .content-list {
   list-style-type: none;
   padding: 0;
 }
 
 .content-item {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-
-.Collapsible__contentInner ul {
-  list-style: none;
-  padding: inherit;
-}
-
 
 .collapsible-trigger {
+  background-color: #6c5ce7;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #e9ecef;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  color: #333;
 }
 
 .collapsible-trigger:hover {
-  background-color: #d0d4d9;
+  background-color: #5b47d1;
 }
 
-.chevron-icon {
-  transition: transform 0.3s ease;
+.content-item-sub {
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
-.collapsible-trigger[aria-expanded="true"] .chevron-icon {
-  transform: rotate(180deg);
+.collapsible-trigger-sub {
+  background-color: #74b9ff;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
 }
 
-.content-link {
-  display: block;
-  padding: 10px 15px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  color: #495057;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  border-radius: 4px;
+.collapsible-trigger-sub:hover {
+  background-color: #0984e3;
+}
+
+.content-item-sub2 {
+  margin-left: 35px;
   margin-top: 5px;
 }
 
-.content-link.completed {
-  background-color: #727272;
-  color: #ffffff;
+.content-link {
+  color: #2d3436;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 4px;
+  transition: all 0.3s;
 }
 
-.content-link.completed:hover {
-  background-color: #666666;
-  color: #000000;
-}
-
-.content-link.incomplete {
-  background-color: #ffffff;
-  color: #495057;
-}
-
-.content-link.incomplete:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  color: #007bff;
+.content-link:hover {
+  background-color: #dfe6e9;
 }
 
 .completion-status {
   font-size: 0.8em;
-  font-weight: bold;
-  margin-left: 10px;
+  color: #00b894;
+  margin-left: 5px;
 }
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* アイコンのプレースホルダー */
+.icon-chapter::before { content: "📚"; }
+.icon-section::before { content: "📂"; }
+.icon-page::before { content: "📄"; }
 
 /* アニメーション効果 */
 @keyframes fadeIn {
@@ -199,20 +211,6 @@ input[type="password"] {
   animation: fadeIn 0.3s ease-out;
   border-radius: 0 0 4px 4px;
 }
-
-/* 各章の背景色を変える */
-.content-item:nth-child(3n+1) .collapsible-trigger {
-  background-color: #e3f2fd;
-}
-
-.content-item:nth-child(3n+2) .collapsible-trigger {
-  background-color: #e8f5e9;
-}
-
-.content-item:nth-child(3n+3) .collapsible-trigger {
-  background-color: #fff3e0;
-}
-
 
 /* 学習進捗 */
 /* 全体のコンテナ */
