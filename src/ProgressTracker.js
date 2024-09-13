@@ -3,7 +3,7 @@ import apiRequest from './utils/apiRequest';
 import './App.css';
 import Collapsible from 'react-collapsible';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
-import { chapters } from './chapters';  
+import { chapters } from './chapters';  // chapters.js からデータをインポート
 
 const formatTime = (seconds) => {
   const h = Math.floor(seconds / 3600);
@@ -84,10 +84,7 @@ const ProgressTracker = () => {
   };
 
   const getProgressForSubSection = (chapterId) => {
-    return progress.find((item) => item.chapterId === chapterId) || {
-      completed: false,
-      studyTime: 0,
-    };
+    return progress.find((item) => item.chapterId === chapterId) || null;
   };
 
   return (
@@ -101,72 +98,97 @@ const ProgressTracker = () => {
       )}
 
       <ul className='progress-list-container'>
-        {chapters.length > 0 ? (
-          chapters.map((chapter, chapterIndex) => (
-            <li key={chapterIndex} className='progress-item-container'>
-              <div
-                className='progress-chapter'
-                onClick={() => handleToggle(chapterIndex)}
-              >
-                {chapter.title}
-                {activeChapter === chapterIndex ? (
-                  <FiChevronDown className='chevron-icon' />
-                ) : (
-                  <FiChevronRight className='chevron-icon' />
-                )}
-              </div>
-              <Collapsible open={activeChapter === chapterIndex}>
-                <ul className='progress-list'>
-                  {chapter.sections.map((section, sectionIndex) => (
-                    <li key={sectionIndex} className='progress-item-container'>
-                      <div
-                        className='progress-section'
-                        onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
-                      >
-                        {section.title}
-                        {activeSubIndex[chapterIndex] === sectionIndex ? (
-                          <FiChevronDown className='chevron-icon' />
-                        ) : (
-                          <FiChevronRight className='chevron-icon' />
-                        )}
-                      </div>
-                      <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
-                        <ul>
-                          {section.subSections.map((subSection, subIndex) => {
-                            const subSectionProgress = getProgressForSubSection(subSection.chapterId);
+        {chapters?.length > 0 ? (
+          chapters.map((chapter, chapterIndex) => {
+            // その章のいずれかのセクションに進捗があるか確認
+            const chapterHasProgress = chapter.sections.some((section) => 
+              section.subSections.some((subSection) => getProgressForSubSection(subSection.chapterId))
+            );
 
-                            return (
-                              <li key={subIndex} className='progress-item'>
-                                <div className='chapter-info'>
-                                  <span className='chapter-id'>
-                                    {subSection.title}
-                                  </span>
-                                  <span
-                                    className={`chapter-status ${
-                                      subSectionProgress.completed
-                                        ? 'status-completed'
-                                        : 'status-incomplete'
-                                    }`}
-                                  >
-                                    {subSectionProgress.completed ? '完了' : '未完了'}
-                                  </span>
-                                </div>
-                                <span className='study-time'>
-                                  勉強時間: {formatTime(subSectionProgress.studyTime)}
-                                </span>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </Collapsible>
-                    </li>
-                  ))}
-                </ul>
-              </Collapsible>
-            </li>
-          ))
+            if (!chapterHasProgress) return null;  // 進捗がなければ表示しない
+
+            return (
+              <li key={chapterIndex} className='progress-item-container'>
+                <div
+                  className='progress-chapter'
+                  onClick={() => handleToggle(chapterIndex)}
+                >
+                  {chapter.title}
+                  {activeChapter === chapterIndex ? (
+                    <FiChevronDown className='chevron-icon' />
+                  ) : (
+                    <FiChevronRight className='chevron-icon' />
+                  )}
+                </div>
+                <Collapsible open={activeChapter === chapterIndex}>
+                  <ul className='progress-list'>
+                    {chapter.sections?.length > 0 ? chapter.sections.map((section, sectionIndex) => {
+                      const sectionHasProgress = section.subSections.some((subSection) => getProgressForSubSection(subSection.chapterId));
+                      
+                      if (!sectionHasProgress) return null;  // 進捗がなければセクションを表示しない
+
+                      return (
+                        <li key={sectionIndex} className='progress-item-container'>
+                          <div
+                            className='progress-section'
+                            onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
+                          >
+                            {section.title}
+                            {activeSubIndex[chapterIndex] === sectionIndex ? (
+                              <FiChevronDown className='chevron-icon' />
+                            ) : (
+                              <FiChevronRight className='chevron-icon' />
+                            )}
+                          </div>
+                          <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
+                            <ul>
+                              {section.subSections?.length > 0 ? section.subSections.map((subSection, subIndex) => {
+                                const subSectionProgress = getProgressForSubSection(subSection.chapterId);
+
+                                if (!subSectionProgress) return null;  // 進捗がなければサブセクションを表示しない
+
+                                return (
+                                  <li key={subIndex} className='progress-item'>
+                                    <div className='chapter-info'>
+                                      <span className='chapter-id'>
+                                        {subSection.title}
+                                      </span>
+                                      <span
+                                        className={`chapter-status ${
+                                          subSectionProgress.completed
+                                            ? 'status-completed'
+                                            : 'status-incomplete'
+                                        }`}
+                                      >
+                                        {subSectionProgress.completed ? '完了' : '未完了'}
+                                      </span>
+                                    </div>
+                                    <span className='study-time'>
+                                      勉強時間: {formatTime(subSectionProgress.studyTime)}
+                                    </span>
+                                  </li>
+                                );
+                              }) : (
+                                <li className='progress-item'>
+                                  <p>No subSections available.</p>
+                                </li>
+                              )}
+                            </ul>
+                          </Collapsible>
+                        </li>
+                      );
+                    }) : (
+                      <li className='progress-item'>
+                        <p>No sections available.</p>
+                      </li>
+                    )}
+                  </ul>
+                </Collapsible>
+              </li>
+            );
+          })
         ) : (
-          <p>No progress data available.</p>
+          <p>No chapters available.</p>
         )}
       </ul>
       <div className='total-study-time'>
