@@ -11,7 +11,6 @@ body {
 
 ul li {
   list-style: none;
-  padding-left: 0 !important;
 }
 
 /* フォーム */
@@ -667,3 +666,6 @@ input[type="password"] {
   background-color: #45a049; /* ホバー時の背景色 */
 }
 
+ul {
+  padding: 0 !important;
+}
