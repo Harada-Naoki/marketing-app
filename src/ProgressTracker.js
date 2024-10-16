@@ -103,7 +103,7 @@ const ProgressTracker = () => {
                 >
                   {chapter.title}
                   <span className='study-time-chapter'>
-                    の合計勉強時間: {formatTime(chapterStudyTime)}
+                    : {formatTime(chapterStudyTime)}
                   </span>
                   {activeChapter === chapterIndex ? (
                     <FiChevronDown className='chevron-icon' />
@@ -124,7 +124,7 @@ const ProgressTracker = () => {
                           >
                             {section.title}
                             <span className='study-time-section'>
-                              合計勉強時間: {formatTime(sectionStudyTime)}
+                              : {formatTime(sectionStudyTime)}
                             </span>
                             {activeSubIndex[chapterIndex] === sectionIndex ? (
                               <FiChevronDown className='chevron-icon' />
@@ -157,7 +157,7 @@ const ProgressTracker = () => {
                                       </span>
                                     </div>
                                     <span className='study-time'>
-                                      勉強時間: {formatTime(subSectionProgress.studyTime)}
+                                      : {formatTime(subSectionProgress.studyTime)}
                                     </span>
                                   </li>
                                 );

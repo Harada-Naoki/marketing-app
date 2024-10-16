@@ -85,7 +85,7 @@ input[type="password"] {
 .home-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   font-family: Arial, sans-serif;
 }
 
@@ -267,6 +267,19 @@ input[type="password"] {
 }
 
 /* 進捗アイテム */
+.progress-item-container {
+  background-color: #74b9ff;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .progress-item {
   background-color: white;
   padding: 1rem;
