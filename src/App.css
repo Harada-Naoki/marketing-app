@@ -123,10 +123,6 @@ input[type="password"] {
   margin-bottom: 15px;
 }
 
-.collapsible {
-  margin-bottom: 20px;
-}
-
 .collapsible-trigger {
   background-color: #6c5ce7;
   color: #fff;
@@ -259,6 +255,10 @@ input[type="password"] {
 .progress-item-container:nth-child(3n+3) .progress-chapter::before {
   content: "📙";
   margin-right: 0.5rem;
+}
+
+.progress-item-container:last-child {
+  margin-bottom: 20px;
 }
 
 /* 進捗リスト */
