@@ -103,7 +103,9 @@ const ProgressTracker = () => {
                 >
                   {chapter.title}
                   <span className='study-time-chapter'>
-                    : {formatTime(chapterStudyTime)}
+                    <span className='study-time'>
+                      : {formatTime(chapterStudyTime)}
+                    </span>
                   </span>
                   {activeChapter === chapterIndex ? (
                     <FiChevronDown className='chevron-icon' />
