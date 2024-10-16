@@ -282,6 +282,10 @@ input[type="password"] {
   align-items: center;
 }
 
+.progress-section:last-child {
+  margin-bottom: 5px;
+}
+
 .progress-item {
   background-color: white;
   padding: 1rem;
@@ -293,6 +297,10 @@ input[type="password"] {
   margin-bottom: 0.75rem;
   transition: all 0.3s ease;
   font-size: smaller;
+}
+
+.progress-item:first-child {
+  margin-top: 5px;
 }
 
 .progress-item:hover {
