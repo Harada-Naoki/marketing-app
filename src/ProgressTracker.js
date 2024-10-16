@@ -103,7 +103,7 @@ const ProgressTracker = () => {
                 >
                   {chapter.title}
                   <span className='study-time-chapter'>
-                    章の合計勉強時間: {formatTime(chapterStudyTime)}
+                    の合計勉強時間: {formatTime(chapterStudyTime)}
                   </span>
                   {activeChapter === chapterIndex ? (
                     <FiChevronDown className='chevron-icon' />

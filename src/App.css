@@ -11,6 +11,7 @@ body {
 
 ul li {
   list-style: none;
+  padding-left: 0;
 }
 
 /* フォーム */
@@ -140,7 +141,7 @@ input[type="password"] {
 }
 
 .content-item-sub {
-  margin-left: 20px;
+  /* margin-left: 20px; */
   margin-top: 10px;
 }
 
@@ -162,7 +163,7 @@ input[type="password"] {
 }
 
 .content-item-sub2 {
-  margin-left: 35px;
+  /* margin-left: 35px; */
   margin-top: 5px;
 }
 
