@@ -244,6 +244,7 @@ input[type="password"] {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
+  font-size: medium;
 }
 
 .progress-item-container:nth-child(3n+1) .progress-chapter::before {
@@ -288,6 +289,7 @@ input[type="password"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: small;
 }
 
 .progress-item {
@@ -360,15 +362,11 @@ input[type="password"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: medium;
 }
 
 .total-time-label {
-  font-size: 1.125rem;
   font-weight: bold;
-}
-
-.total-time-value {
-  font-size: 1.25rem;
 }
 
 /* ログアウトボタン */
