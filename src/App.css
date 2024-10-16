@@ -155,6 +155,7 @@ input[type="password"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: small;
 }
 
 .collapsible-trigger-sub:hover {
@@ -174,6 +175,7 @@ input[type="password"] {
   padding: 8px 10px;
   border-radius: 4px;
   transition: all 0.3s;
+  font-size: smaller;
 }
 
 .content-link:hover {
@@ -267,7 +269,7 @@ input[type="password"] {
 }
 
 /* 進捗アイテム */
-.progress-chapter {
+.progress-section {
   background-color: #74b9ff;
   color: #fff;
   padding: 10px 12px;
@@ -290,6 +292,7 @@ input[type="password"] {
   align-items: center;
   margin-bottom: 0.75rem;
   transition: all 0.3s ease;
+  font-size: smaller;
 }
 
 .progress-item:hover {
@@ -303,7 +306,6 @@ input[type="password"] {
 }
 
 .chapter-id {
-  font-size: 1.125rem;
   font-weight: 600;
 }
 
