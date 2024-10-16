@@ -267,7 +267,7 @@ input[type="password"] {
 }
 
 /* 進捗アイテム */
-.progress-item-container {
+.progress-chapter {
   background-color: #74b9ff;
   color: #fff;
   padding: 10px 12px;
