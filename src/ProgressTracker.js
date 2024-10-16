@@ -123,14 +123,16 @@ const ProgressTracker = () => {
                             onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
                           >
                             {section.title}
-                            <span className='study-time-section'>
-                              : {formatTime(sectionStudyTime)}
-                            </span>
                             {activeSubIndex[chapterIndex] === sectionIndex ? (
                               <FiChevronDown className='chevron-icon' />
                             ) : (
                               <FiChevronRight className='chevron-icon' />
                             )}
+                            <span className='study-time-section'>
+                            <span className='study-time'>
+                              : {formatTime(sectionStudyTime)}
+                              </span>
+                            </span>
                           </div>
                           <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
                             <ul>
