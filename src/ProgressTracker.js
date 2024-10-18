@@ -19,11 +19,9 @@ const getProgressForChapter = (progress, chapterId) => {
 
 // サブカテゴリごとの勉強時間の合計を計算
 const calculateSectionStudyTime = (progress, subSections) => {
-  // subSections が存在する場合にのみ reduce を実行
   if (!subSections || !Array.isArray(subSections)) {
     return 0;
   }
-
   return subSections.reduce((total, subSection) => {
     const subSectionProgress = getProgressForChapter(progress, subSection.chapterId);
     return subSectionProgress ? total + subSectionProgress.studyTime : total;
@@ -32,17 +30,14 @@ const calculateSectionStudyTime = (progress, subSections) => {
 
 // 章全体の勉強時間の合計を計算
 const calculateChapterStudyTime = (progress, sections) => {
-  // sections が存在する場合にのみ reduce を実行
   if (!sections || !Array.isArray(sections)) {
     return 0;
   }
-
   return sections.reduce((total, section) => {
     const sectionStudyTime = calculateSectionStudyTime(progress, section.subSections);
     return total + sectionStudyTime;
   }, 0);
 };
-
 
 const ProgressTracker = () => {
   const [progress, setProgress] = useState([]);
@@ -51,22 +46,51 @@ const ProgressTracker = () => {
   const [activeSubIndex, setActiveSubIndex] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
 
+  // 進捗データを取得する関数
+  const fetchProgress = async () => {
+    try {
+      const response = await apiRequest('/api/progress/status');
+      if (response.data && Array.isArray(response.data.progress)) {
+        setProgress(response.data.progress);
+        setTotalStudyTime(response.data.totalStudyTime);
+      } else {
+        setErrorMessage('Progress data is not available or not an array.');
+      }
+    } catch (error) {
+      setErrorMessage(`Error fetching progress: ${error.message}`);
+    }
+  };
+
+  // ページが初めて表示された時と「戻る」ボタンが押された時に進捗を取得
   useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const response = await apiRequest('/api/progress/status');
-        if (response.data && Array.isArray(response.data.progress)) {
-          setProgress(response.data.progress);
-          setTotalStudyTime(response.data.totalStudyTime);
-        } else {
-          setErrorMessage('Progress data is not available or not an array.');
-        }
-      } catch (error) {
-        setErrorMessage(`Error fetching progress: ${error.message}`);
+    fetchProgress();
+
+    // popstateイベントでブラウザ履歴が変更された時に進捗を再取得
+    const handlePopState = () => {
+      fetchProgress();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  // ページが再表示された時に進捗をリロードする
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchProgress(); // ページが再表示された時に進捗を再取得
       }
     };
 
-    fetchProgress();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const handleToggle = (chapterIndex) => {
