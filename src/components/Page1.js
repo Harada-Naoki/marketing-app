@@ -129,7 +129,7 @@ function Page1() {
     };
   
     // ページ離脱時に進捗を保存する
-    const handleBeforeUn= (event) => {
+    const handleBeforeUnload = (event) => {
       saveProgress({ updateStartTime: false });
       // 必要であれば、確認ダイアログを表示するためにカスタムメッセージを設定できます
       event.returnValue = ''; // 一部のブラウザでは必要
@@ -158,7 +158,6 @@ function Page1() {
       window.removeEventListener('beforeunload', handleBeforeUnload); // クリーンアップ
     };
   }, [isValidChapter, saveProgress, navigate]);
-  
   
   useEffect(() => {
     if (chatContainerRef.current) {
