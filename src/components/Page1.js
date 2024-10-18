@@ -34,9 +34,15 @@ function Page1() {
     const { updateStartTime = false } = options;
     try {
       const endTime = Date.now();
-      const elapsed = Math.floor((endTime - startTime) / 1000);
+      let elapsed = Math.floor((endTime - startTime) / 1000);
+  
+      // 経過時間が60秒より長い場合は強制的に60秒に制限
+      if (elapsed > 60) {
+        elapsed = 60;
+      }
+  
       const totalStudyTime = studyTime + elapsed;
-
+  
       await apiRequest('/api/progress/update', {
         method: 'POST',
         data: {
@@ -49,7 +55,7 @@ function Page1() {
           completed: options.completed || false,
         }
       });
-
+  
       if (updateStartTime) {
         setStartTime(Date.now());
       }
@@ -57,6 +63,7 @@ function Page1() {
       console.error('Error saving progress', error);
     }
   }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
+  
 
   const completeChapter = useCallback(async () => {
     try {
