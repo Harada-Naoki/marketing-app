@@ -160,6 +160,11 @@ function Page1() {
       }
     };
   
+    // 1分ごとに進捗を保存
+    const intervalId = setInterval(() => {
+      saveProgress({ updateStartTime: true });
+    }, 60000); // 60,000ミリ秒 = 1分
+  
     // イベントリスナーの設定
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
@@ -169,6 +174,7 @@ function Page1() {
   
     return () => {
       // クリーンアップ
+      clearInterval(intervalId); // setIntervalのクリーンアップ
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
@@ -176,6 +182,7 @@ function Page1() {
       window.removeEventListener('popstate', handlePopState); // クリーンアップ
     };
   }, [isValidChapter, saveProgress, navigate, chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
+  
   
   useEffect(() => {
     if (chatContainerRef.current) {
