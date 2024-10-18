@@ -55,8 +55,8 @@ router.post('/update', authenticateToken, async (req, res) => {
     const newStudyTime = Math.max(studyTime - previousStudyTime, 0);
     progress.studyTime = previousStudyTime + newStudyTime;
 
-    // 全体の totalStudyTime を更新
-    user.totalStudyTime += newStudyTime;
+    // すべてのチャプターのstudyTimeの合計を計算してtotalStudyTimeに設定
+    user.totalStudyTime = user.progress.reduce((total, item) => total + item.studyTime, 0);
 
     await user.save();
 
@@ -66,7 +66,6 @@ router.post('/update', authenticateToken, async (req, res) => {
     res.status(500).send('Error updating progress');
   }
 });
-
 
 // 全ての進捗を取得するエンドポイント
 router.get('/status', authenticateToken, async (req, res) => {
