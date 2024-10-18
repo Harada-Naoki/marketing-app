@@ -162,7 +162,7 @@ function Page1() {
   
     // 1分ごとに進捗を保存
     const intervalId = setInterval(() => {
-      saveProgress({ updateStartTime: true });
+      saveProgress({ updateStartTime: false });
     }, 60000); // 60,000ミリ秒 = 1分
   
     // イベントリスナーの設定
