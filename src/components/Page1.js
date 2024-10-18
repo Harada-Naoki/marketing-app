@@ -23,14 +23,10 @@ function Page1() {
   const [showResults, setShowResults] = useState(false);
   const [studyTime, setStudyTime] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
-  const [inactiveStartTime, setInactiveStartTime] = useState(null);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
   const chatContainerRef = useRef(null);
-  const inactivityTimer = useRef(null);
-  const hasLoadedProgress = useRef(false); // 進捗がロードされたかどうかを追跡するフラグ
-
+ 
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
@@ -75,7 +71,6 @@ function Page1() {
     const nextChapterId = `1_${chapterIndex + 2}`;
     if (chapterIndex < CHAPTERS_COUNT - 1) {
       navigate(`/marketing-app/Page1/${nextChapterId}`);
-      // window.location.reload();
     } else {
       navigate('/marketing-app');
     }
@@ -113,7 +108,6 @@ function Page1() {
     }
   }, [chapterId]);
 
-
   useEffect(() => {
     loadProgress();
   }, [loadProgress]);
@@ -123,21 +117,25 @@ function Page1() {
       navigate('/marketing-app'); 
       return;
     }
-
+  
+    // 非アクティブ時に進捗を保存する
     const handleInactivity = () => {
-      setInactiveStartTime(Date.now());
-      if (hasLoadedProgress.current) { 
-        saveProgress();
-      }
+      saveProgress({ updateStartTime: false });
     };
-
-    const resetInactivityTimer = () => {
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-      inactivityTimer.current = setTimeout(handleInactivity, 180000);
+  
+    // 再アクティブ時に`startTime`を更新
+    const handleActivityResume = () => {
+      setStartTime(Date.now()); 
     };
-
+  
+    // ページ離脱時に進捗を保存する
+    const handleBeforeUn= (event) => {
+      saveProgress({ updateStartTime: false });
+      // 必要であれば、確認ダイアログを表示するためにカスタムメッセージを設定できます
+      event.returnValue = ''; // 一部のブラウザでは必要
+    };
+  
+    // visibilitychangeイベントで非表示→再表示を検出
     const handleVisibilityChange = () => {
       if (document.hidden) {
         handleInactivity();
@@ -145,45 +143,23 @@ function Page1() {
         handleActivityResume();
       }
     };
-
-    const handleActivityResume = () => {
-      if (inactiveStartTime) {
-        const inactiveEndTime = Date.now();
-        const inactiveDuration = Math.floor((inactiveEndTime - inactiveStartTime) / 1000);
-        setInactiveStartTime(null);
-        setStartTime(prevTime => prevTime + inactiveDuration * 1000);
-      }
-      setStartTime(Date.now());
-      resetInactivityTimer();
-    };
-
+  
+    // イベントリスナーの設定
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
     window.addEventListener('blur', handleInactivity);
-    ['mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(event => {
-      window.addEventListener(event, resetInactivityTimer);
-    });
-
-    const hasLoaded = hasLoadedProgress.current; 
-
+    window.addEventListener('beforeunload', handleBeforeUnload); // ページ離脱時のイベント
+  
     return () => {
+      // クリーンアップ
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
-      ['mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(event => {
-        window.removeEventListener(event, resetInactivityTimer);
-      });
-
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-
-      if (hasLoaded) { 
-        saveProgress();
-      }
+      window.removeEventListener('beforeunload', handleBeforeUnload); // クリーンアップ
     };
-  }, [isValidChapter, startTime, studyTime, inactiveStartTime, saveProgress, navigate]);
-
+  }, [isValidChapter, saveProgress, navigate]);
+  
+  
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -230,16 +206,16 @@ function Page1() {
 
   const showNextStep = useCallback(() => {
     if (visibleStep < chapter.content.length - 1) {
-      setVisibleStep(prev => prev + 1);
-      setAllImagesLoaded(false);
-      saveProgress({ updateStartTime: true });
+      setVisibleStep(prev => prev + 1); // 次のステップへ進む
+      setAllImagesLoaded(false); // 画像のロードフラグをリセット
+      // saveProgress({ updateStartTime: true }); // 時間の更新を省略
     } else {
-      setQuizStarted(true);
-      setShowFeedback(false);
-      saveProgress({ updateStartTime: true });
+      setQuizStarted(true); // クイズを開始する
+      setShowFeedback(false); // フィードバックを非表示にする
+      // saveProgress({ updateStartTime: true }); // 時間の更新を省略
     }
-  }, [visibleStep, chapter, saveProgress]);
-
+  }, [visibleStep, chapter]);
+  
   const handleQuizAnswer = useCallback((selectedAnswer) => {
     const currentQuestion = chapter.quizQuestions[currentQuestionIndex];
     const correct = selectedAnswer === currentQuestion.correctAnswer;
@@ -248,19 +224,19 @@ function Page1() {
     if (correct) {
       setScore(prev => prev + 1);
     }
-    saveProgress();
-  }, [chapter, currentQuestionIndex, saveProgress]);
-
+    // saveProgress(); // 進捗の保存を省略
+  }, [chapter, currentQuestionIndex]);
+  
   const nextQuestion = useCallback(() => {
     setShowFeedback(false);
     if (currentQuestionIndex < chapter.quizQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex(prev => prev + 1); // 次の質問に進む
     } else {
-      setShowResults(true);
+      setShowResults(true); // クイズの結果を表示
     }
-    saveProgress();
-  }, [currentQuestionIndex, chapter, saveProgress]);
-
+    // saveProgress(); // 進捗の保存を省略
+  }, [currentQuestionIndex, chapter]);
+  
   const resetQuiz = useCallback(async () => {
     try {
       // クイズの状態をリセット
@@ -352,9 +328,14 @@ function Page1() {
 
       {!showResults && (
         <div className="links-container">
-         <Link to="/marketing">ホームに戻る</Link>
+          <Link 
+          to="/marketing" 
+          onClick={() => saveProgress({ updateStartTime: false })}
+          >
+            ホームに戻る
+          </Link>
         </div>
-    )}
+      )}
     </div>
   );
 }
