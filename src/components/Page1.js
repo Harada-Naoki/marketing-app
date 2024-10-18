@@ -129,7 +129,7 @@ function Page1() {
     };
   
     // ページ離脱時に進捗を保存する (sendBeaconを使用)
-    const handleBeforeUnload = (event) => {
+    const handlePageHide = (event) => {
       const data = JSON.stringify({
         chapterId: chapterId,
         visibleStep: visibleStep,
@@ -144,9 +144,6 @@ function Page1() {
       
       // Beaconを使用してデータ送信
       navigator.sendBeacon(url, data);
-  
-      // event.returnValueは、ユーザーに確認メッセージを表示させるために必要
-      event.returnValue = '';
     };
   
     // 戻る・進むボタンが押された時に進捗を保存
@@ -167,7 +164,7 @@ function Page1() {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
     window.addEventListener('blur', handleInactivity);
-    window.addEventListener('beforeunload', handleBeforeUnload); // ページ離脱時のイベント
+    window.addEventListener('pagehide', handlePageHide); // ページ離脱時のイベント
     window.addEventListener('popstate', handlePopState); // 戻る・進むボタンのイベント
   
     return () => {
@@ -175,11 +172,10 @@ function Page1() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
-      window.removeEventListener('beforeunload', handleBeforeUnload); // クリーンアップ
+      window.removeEventListener('pagehide', handlePageHide); // クリーンアップ
       window.removeEventListener('popstate', handlePopState); // クリーンアップ
     };
   }, [isValidChapter, saveProgress, navigate, chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
-  
   
   useEffect(() => {
     if (chatContainerRef.current) {
