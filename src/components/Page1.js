@@ -131,8 +131,12 @@ function Page1() {
     // ページ離脱時に進捗を保存する
     const handleBeforeUnload = (event) => {
       saveProgress({ updateStartTime: false });
-      // 必要であれば、確認ダイアログを表示するためにカスタムメッセージを設定できます
       event.returnValue = ''; // 一部のブラウザでは必要
+    };
+  
+    // 戻る・進むボタンが押された時に進捗を保存
+    const handlePopState = () => {
+      saveProgress({ updateStartTime: false });
     };
   
     // visibilitychangeイベントで非表示→再表示を検出
@@ -149,6 +153,7 @@ function Page1() {
     window.addEventListener('focus', handleActivityResume);
     window.addEventListener('blur', handleInactivity);
     window.addEventListener('beforeunload', handleBeforeUnload); // ページ離脱時のイベント
+    window.addEventListener('popstate', handlePopState); // 戻る・進むボタンのイベント
   
     return () => {
       // クリーンアップ
@@ -156,8 +161,10 @@ function Page1() {
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
       window.removeEventListener('beforeunload', handleBeforeUnload); // クリーンアップ
+      window.removeEventListener('popstate', handlePopState); // クリーンアップ
     };
   }, [isValidChapter, saveProgress, navigate]);
+  
   
   useEffect(() => {
     if (chatContainerRef.current) {
