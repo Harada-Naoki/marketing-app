@@ -36,7 +36,6 @@ function Page1() {
       const endTime = Date.now();
       let elapsed = Math.floor((endTime - startTime) / 1000);
   
-      // 経過時間が60秒より長い場合は強制的に60秒に制限
       if (elapsed > 60) {
         elapsed = 60;
       }
@@ -68,7 +67,7 @@ function Page1() {
   const completeChapter = useCallback(async () => {
     try {
       await saveProgress({ completed: true });
-      setShowResults(true);  // 完了後に結果表示画面に遷移
+      setShowResults(true);  
     } catch (error) {
       console.error('Error completing chapter', error);
     }
@@ -125,17 +124,14 @@ function Page1() {
       return;
     }
   
-    // 非アクティブ時に進捗を保存する
     const handleInactivity = () => {
       saveProgress({ updateStartTime: false });
     };
   
-    // 再アクティブ時に`startTime`を更新
     const handleActivityResume = () => {
       setStartTime(Date.now());
     };
   
-    // ページ離脱時に進捗を保存する (sendBeaconを使用)
     const handlePageHide = (event) => {
       const data = JSON.stringify({
         chapterId: chapterId,
@@ -149,16 +145,13 @@ function Page1() {
   
       const url = '/api/progress/update';
       
-      // Beaconを使用してデータ送信
       navigator.sendBeacon(url, data);
     };
   
-    // 戻る・進むボタンが押された時に進捗を保存
     const handlePopState = () => {
       saveProgress({ updateStartTime: false });
     };
   
-    // visibilitychangeイベントで非表示→再表示を検出
     const handleVisibilityChange = () => {
       if (document.hidden) {
         handleInactivity();
@@ -167,26 +160,23 @@ function Page1() {
       }
     };
   
-    // 1分ごとに進捗を保存
     const intervalId = setInterval(() => {
       saveProgress({ updateStartTime: false });
-    }, 60000); // 60,000ミリ秒 = 1分
+    }, 60000); 
   
-    // イベントリスナーの設定
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
     window.addEventListener('blur', handleInactivity);
-    window.addEventListener('pagehide', handlePageHide); // ページ離脱時のイベント
-    window.addEventListener('popstate', handlePopState); // 戻る・進むボタンのイベント
+    window.addEventListener('pagehide', handlePageHide); 
+    window.addEventListener('popstate', handlePopState); 
   
     return () => {
-      // クリーンアップ
-      clearInterval(intervalId); // setIntervalのクリーンアップ
+      clearInterval(intervalId); 
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
-      window.removeEventListener('pagehide', handlePageHide); // クリーンアップ
-      window.removeEventListener('popstate', handlePopState); // クリーンアップ
+      window.removeEventListener('pagehide', handlePageHide); 
+      window.removeEventListener('popstate', handlePopState); 
     };
   }, [isValidChapter, saveProgress, navigate, chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
   
@@ -237,13 +227,11 @@ function Page1() {
 
   const showNextStep = useCallback(() => {
     if (visibleStep < chapter.content.length - 1) {
-      setVisibleStep(prev => prev + 1); // 次のステップへ進む
-      setAllImagesLoaded(false); // 画像のロードフラグをリセット
-      // saveProgress({ updateStartTime: true }); // 時間の更新を省略
+      setVisibleStep(prev => prev + 1); 
+      setAllImagesLoaded(false); 
     } else {
-      setQuizStarted(true); // クイズを開始する
-      setShowFeedback(false); // フィードバックを非表示にする
-      // saveProgress({ updateStartTime: true }); // 時間の更新を省略
+      setQuizStarted(true); 
+      setShowFeedback(false); 
     }
   }, [visibleStep, chapter]);
   
@@ -255,22 +243,19 @@ function Page1() {
     if (correct) {
       setScore(prev => prev + 1);
     }
-    // saveProgress(); // 進捗の保存を省略
   }, [chapter, currentQuestionIndex]);
   
   const nextQuestion = useCallback(() => {
     setShowFeedback(false);
     if (currentQuestionIndex < chapter.quizQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1); // 次の質問に進む
+      setCurrentQuestionIndex(prev => prev + 1); 
     } else {
-      setShowResults(true); // クイズの結果を表示
+      setShowResults(true); 
     }
-    // saveProgress(); // 進捗の保存を省略
   }, [currentQuestionIndex, chapter]);
   
   const resetQuiz = useCallback(async () => {
     try {
-      // クイズの状態をリセット
       setScore(0);
       setCurrentQuestionIndex(0);
       setShowFeedback(false);
