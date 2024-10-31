@@ -60,7 +60,7 @@ export const quizQuestions = [
       "お試しセットを使い切るタイミング",
       "月末"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "お試しセットを使い切るタイミングでリマインドすることで、自然に次の購入を考えてもらうことができます。"
   },
   {
@@ -71,7 +71,7 @@ export const quizQuestions = [
       "セットを使い切る7日後",
       "30日後"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "セットを使い切るタイミングに合わせてアプローチすることで、リピート購入のピークを狙えます。"
   },
   {
@@ -82,7 +82,7 @@ export const quizQuestions = [
       "月末の売上が増えるから",
       "商品の在庫が減るタイミングだから"
     ],
-    correctAnswer: 1,
+    correctAnswer: 0,
     explanation: "自然と次の購入を考えやすいタイミングでアプローチすることで、ユーザーに無理なくリピート購入を促すことができます。"
   },
   {
@@ -93,7 +93,7 @@ export const quizQuestions = [
       "ユーザーが商品を使い慣れてきた頃",
       "リピート購入のピークが過ぎた後"
     ],
-    correctAnswer: 4,
+    correctAnswer: 3,
     explanation: "リピート購入のピークが過ぎた後では、購入意欲が下がるため、効果的なタイミングとは言えません。"
   }
 ];

@@ -83,7 +83,7 @@ export const quizQuestions = [
       "1件の新規顧客を獲得するためのコスト",
       "1回のリピート購入を獲得するためのコスト"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "CPAは新規顧客を1件獲得するためにかかるコストを示します。"
   },
   {
@@ -94,7 +94,7 @@ export const quizQuestions = [
       "商品の価格を下げたいとき",
       "広告費を減らしたいとき"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "CPOは商品やサービスのリピート購入を促進する際に重視される指標です。"
   },
   {
@@ -105,7 +105,7 @@ export const quizQuestions = [
       "1,000円",
       "50,000円"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "CPOは50万円 ÷ 50人 = 10,000円です。"
   },
   {
@@ -116,7 +116,7 @@ export const quizQuestions = [
       "どちらも同じ意味を持つ",
       "CPAはリピート購入、CPOは新規顧客獲得"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "CPAは新規顧客を獲得するためのコストで、CPOは注文を獲得するためのコストです。"
   }
 ];

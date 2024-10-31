@@ -80,7 +80,7 @@ export const quizQuestions = [
       "何の説明もなく販売される商品",
       "特にパッケージに工夫のない商品"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "お試しセットのように効果がすぐに体験できる商品は、F2転換に適しています。"
   },
   {
@@ -91,7 +91,7 @@ export const quizQuestions = [
       "価格を大幅に下げた体験",
       "何も工夫をしない体験"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "初回購入で特別な体験を提供することで、再購入意欲を高めることができます。"
   },
   {
@@ -102,7 +102,7 @@ export const quizQuestions = [
       "商品の価格の高さをアピールする",
       "商品をすぐに売り切れるように見せる"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "商品の良さを具体的に伝えることで、顧客が価値を感じやすくなります。"
   },
   {
@@ -113,7 +113,7 @@ export const quizQuestions = [
       "顧客に購入を強く促す",
       "商品の在庫をアピールする"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "商品の良さがすぐに体験できると、顧客はF2転換を考えやすくなります。"
   }
   

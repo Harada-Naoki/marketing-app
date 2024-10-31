@@ -132,7 +132,7 @@ export const quizQuestions = [
       "お客様が3回目の購入をすること",
       "お客様が新しい商品を試すこと"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "F2転換は、初回購入後にお客様が2回目の購入をすることを指します。"
   },
   {
@@ -143,7 +143,7 @@ export const quizQuestions = [
       "商品選定",
       "コミュニケーション"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "価格の引き下げはF2転換率を上げる直接的な要素ではありません。"
   },
   {
@@ -154,7 +154,7 @@ export const quizQuestions = [
       "最初の30日間",
       "最初の60日間"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "最初の30日間にフォローすることで、次の購入につながる関係を築くことが重要です。"
   },
   {
@@ -165,7 +165,7 @@ export const quizQuestions = [
       "商品の在庫が少なくなったときに提案する",
       "お客様の購入履歴を無視して提案する"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "お客様のニーズが高まる季節やタイミングに合わせた提案が効果的です。"
   }
   

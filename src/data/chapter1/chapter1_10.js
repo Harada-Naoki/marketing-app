@@ -81,7 +81,7 @@ export const quizQuestions = [
       "広告コストが削減できるため",
       "商品の在庫管理が簡単になるため"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "F2転換率が高いと、顧客がリピーターになり、売上の安定や成長に寄与します。"
   },
   {
@@ -92,7 +92,7 @@ export const quizQuestions = [
       "商品の価格",
       "商品選定"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "F2転換率を改善するためには、価格よりもタイミング、コミュニケーション、商品選定が重要です。"
   },
   {
@@ -103,7 +103,7 @@ export const quizQuestions = [
       "セール期間中のみアプローチをする",
       "お客様の興味が無さそうなタイミングで連絡する"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "お客様の購入サイクルに合わせてリマインドを送ることで、F2転換率を高めやすくなります。"
   },
   {
@@ -114,7 +114,7 @@ export const quizQuestions = [
       "商品が到着する前に次の購入を勧める",
       "商品のみ送って、アフターサービスは行わない"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "購入後にフォローを行うことで、お客様との関係を深め、リピート購入を促進します。"
   }
   

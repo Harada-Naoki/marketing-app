@@ -76,7 +76,7 @@ export const quizQuestions = [
       "定期的に連絡を取らない",
       "新しい商品を購入するよう促す"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "最初の接点で丁寧なコミュニケーションを取ることで、顧客に安心感を与え、信頼を築くことができます。"
   },
   {
@@ -87,7 +87,7 @@ export const quizQuestions = [
       "商品の価格を下げる",
       "商品の使い方をわかりやすく伝える"
     ],
-    correctAnswer: 3,
+    correctAnswer: 2,
     explanation: "価格を下げることは必ずしもF2転換に必要ではなく、顧客の不安を払拭し、商品の価値を感じてもらうことが重要です。"
   },
   {
@@ -98,7 +98,7 @@ export const quizQuestions = [
       "商品の効果を伝えない",
       "顧客からの問い合わせを無視する"
     ],
-    correctAnswer: 1,
+    correctAnswer: 0,
     explanation: "メッセージカードなどで特別な体験を提供することで、顧客に商品への愛着を持たせることができます。"
   },
   {
@@ -109,7 +109,7 @@ export const quizQuestions = [
       "楽しい要素を増やす",
       "商品が持つ良さを感じやすい体験を提供する"
     ],
-    correctAnswer: 2,
+    correctAnswer: 1,
     explanation: "購入直後にアプローチするだけでなく、適切なタイミングで再アプローチを行うことが重要です。"
   }
 ];
