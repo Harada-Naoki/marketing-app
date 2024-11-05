@@ -42,8 +42,59 @@ export const chapters = [
             };
           }),
         },
+        {
+          title: 'CRM',
+          subSections: Array.from({ length: 4 }, (_, subIndex) => {
+            const sectionData = require(`./data/chapter1/chapter1_${subIndex + 21}.js`);
+            return {
+              title: sectionData.title,
+              chapterId: `1_${subIndex + 21}`,
+            };
+          }),
+        },
+        {
+          title: '各種広告の特性と役割',
+          subSections: Array.from({ length: 10 }, (_, subIndex) => {
+            const sectionData = require(`./data/chapter1/chapter1_${subIndex + 25}.js`);
+            return {
+              title: sectionData.title,
+              chapterId: `1_${subIndex + 25}`,
+            };
+          }),
+        },
+        {
+          title: 'サイト改善',
+          subSections: Array.from({ length: 4 }, (_, subIndex) => {
+            const sectionData = require(`./data/chapter1/chapter1_${subIndex + 35}.js`);
+            return {
+              title: sectionData.title,
+              chapterId: `1_${subIndex + 35}`,
+            };
+          }),
+        },
+        {
+          title: 'チーム構築',
+          subSections: Array.from({ length: 1 }, (_, subIndex) => {
+            const sectionData = require(`./data/chapter1/chapter1_${subIndex + 39}.js`);
+            return {
+              title: sectionData.title,
+              chapterId: `1_${subIndex + 39}`,
+            };
+          }),
+        },
+        {
+          title: 'このコースの総復習',
+          subSections: Array.from({ length: 1 }, (_, subIndex) => {
+            const sectionData = require(`./data/chapter1/chapter1_${subIndex + 40}.js`);
+            return {
+              title: sectionData.title,
+              chapterId: `1_${subIndex + 40}`,
+            };
+          }),
+        },
       ],
     },
+    
     {
       title: '第2章',
       sections: Array.from({ length: 2 }, (_, sectionIndex) => {

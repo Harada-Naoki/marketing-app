@@ -1,30 +1,11 @@
-export const title = "";
+export const title = "顧客の体験はメールで改善＆広告運用で困った時のポイント3つ";
 
 export const chapterOverview = "";
 
 export const content = [
-  {
-    sender: "",
-    text: ""
-  },
-  {
-    sender: "teacher",
-    type: "image",
-    src: "/images/images1/images1_7/img_1.png", 
-    alt: ""
-  },
+
 ];
 
 export const quizQuestions = [
-  {
-    question: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
-    ],
-    correctAnswer: 1,
-    explanation: ""
-  },
+  
 ];
