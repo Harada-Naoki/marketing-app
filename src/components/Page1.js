@@ -280,7 +280,6 @@ function Page1() {
           <BookOpen className="book-icon" size={50} />
           <h1 className="main-title">{title}</h1>
         </div>
-        return (
          <>
            {visibleStep === 0 && (
              <div className="overview-container">
@@ -302,7 +301,6 @@ function Page1() {
              </>
             )}
          </>
-        );
       </div>
 
       <div className="progress-bar-container">
