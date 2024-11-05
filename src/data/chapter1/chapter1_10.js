@@ -5,11 +5,11 @@ export const chapterOverview = "F2転換率とは、初回購入者（F1）が2�
 export const content = [
   {
     sender: "student",
-    text: "F2転換率って本当に重要なんですか？"
+    text: "F2転換率が重要と学んだのですが、その重要性について詳しく教えてください"
   },
   {
     sender: "teacher",
-    text: "はい、非常に重要な指標です。F2転換率が高いと、顧客がリピーターになる可能性が上がり、売上の安定や成長に直結します。"
+    text: "F2転換率は、非常に重要な指標です。F2転換率が高いと、顧客がリピーターになる可能性が上がり、売上の安定や成長に直結します。"
   },
   {
     sender: "student",

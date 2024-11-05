@@ -5,7 +5,7 @@ export const chapterOverview = "CPA（Cost Per Acquisition）は、新規顧客�
 export const content = [
   {
     sender: "student",
-    text: "CPAとCPOってどちらが大事なんでしょうか？"
+    text: "広告運用で、CPAとCPOという単語をよく聞くのですが、どちらが大事なんでしょうか？"
   },
   {
     sender: "teacher",

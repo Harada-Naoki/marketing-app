@@ -6,7 +6,7 @@ import ChatBubble from '../components/ChatBubble';
 import QuizQuestion from '../components/QuizQuestion';
 import { BookOpen } from 'lucide-react';
 
-const CHAPTERS_COUNT = 20;
+const CHAPTERS_COUNT = 40;
 const chapterData = Array.from({ length: CHAPTERS_COUNT }, (_, i) => require(`../data/chapter1/chapter1_${i + 1}.js`));
 
 function Page1() {
@@ -26,7 +26,8 @@ function Page1() {
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const chatContainerRef = useRef(null);
- 
+  const [showOverview, setShowOverview] = useState(false);
+
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
@@ -280,10 +281,19 @@ function Page1() {
           <h1 className="main-title">{title}</h1>
         </div>
 
-        {visibleStep === 0 && (
+        {/* {visibleStep === 0 && (
           <div className="overview-container">
             <h2 className="overview-title">チャプター概要</h2>
             <p className="overview-text">{chapterOverview}</p>
+          </div>
+        )} */}
+        {(visibleStep === 0 || visibleStep > 0) && (
+          <div className="overview-container">
+            <h2 className="overview-title">チャプター概要</h2>
+              {showOverview && <p className="overview-text">{chapterOverview}</p>}
+            <button onClick={() => setShowOverview(!showOverview)}>
+              {showOverview ? '概要を閉じる' : '概要を見る'}
+            </button>
           </div>
         )}
       </div>
