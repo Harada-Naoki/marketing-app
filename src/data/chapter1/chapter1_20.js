@@ -1,4 +1,4 @@
-export const title = "";
+export const title = "実践！解約率を下げるためのアプローチ②";
 
 export const chapterOverview = "";
 

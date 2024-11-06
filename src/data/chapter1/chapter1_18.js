@@ -1,4 +1,4 @@
-export const title = "";
+export const title = "解約率を下げたい！どんな事業でも使える3つのポイント";
 
 export const chapterOverview = "";
 
