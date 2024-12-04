@@ -91,7 +91,7 @@ export const content = [
     }
 ];
   
-export const questions = [
+export const quizQuestions = [
     {
       question: "ECサイトにおける顧客とのコミュニケーションで重要なことは何ですか？",
       options: [
