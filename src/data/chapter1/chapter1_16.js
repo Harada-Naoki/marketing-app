@@ -45,16 +45,16 @@ export const content = [
   },
   {
     sender: "student",
-    text: "他に新規顧客をリピーターにするためにできることはありますか？"
+    text: "広告運用のポイントについても教えてください。"
   },
   {
     sender: "teacher",
-    text: "広告運用での工夫も重要です。特に運用がうまくいかないときに考えられるポイントが3つあります。"
+    text: "わかりました！特に運用がうまくいかないときに考えられるポイントが3つあります。"
   },
   {
     sender: "teacher",
     type: "image",
-    src: "/images/images1/images1_15/img_1.jpg",
+    src: "/images/images1/images1_16/img_1.jpg",
     alt: ""
   },
   {

@@ -22,7 +22,7 @@ export const content = [
     {
       sender: "teacher",
       type: "image",
-      src: "/images/images1/images1_16/img_2.jpg",
+      src: "/images/images1/images1_17/img_2.jpg",
       alt: ""
     },
     {
@@ -44,7 +44,7 @@ export const content = [
     {
       sender: "teacher",
       type: "image",
-      src: "/images/images1/images1_16/img_1.jpg",
+      src: "/images/images1/images1_17/img_1.jpg",
       alt: ""
     },
     {
