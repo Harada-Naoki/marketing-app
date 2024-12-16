@@ -134,7 +134,6 @@ function Page1() {
     }
   }, [loadProgress]);
   
-
   useEffect(() => {
     if (!isValidChapter) {
       navigate('/marketing-app');

@@ -34,11 +34,19 @@ function Page2() {
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
+  const startTimeRef = useRef(Date.now());
+
   const saveProgress = useCallback(async (options = {}) => {
     const { updateStartTime = false } = options;
+
     try {
       const endTime = Date.now();
-      const elapsed = Math.floor((endTime - startTime) / 1000);
+      let elapsed = Math.floor((endTime - startTimeRef.current) / 1000);
+
+      if (elapsed > 60) {
+        elapsed = 60;
+      }
+
       const totalStudyTime = studyTime + elapsed;
 
       await apiRequest('/api/progress/update', {
@@ -51,16 +59,16 @@ function Page2() {
           score: score,
           studyTime: totalStudyTime,
           completed: options.completed || false,
-        }
+        },
       });
 
       if (updateStartTime) {
-        setStartTime(Date.now());
+        startTimeRef.current = Date.now();
       }
     } catch (error) {
       console.error('Error saving progress', error);
     }
-  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
+  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
 
   const completeChapter = useCallback(async () => {
     try {
@@ -88,16 +96,16 @@ function Page2() {
   const loadProgress = useCallback(async () => {
     try {
       const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET'
+        method: 'GET',
       });
-
+  
       if (response.data) {
         setVisibleStep(response.data.visibleStep);
         setQuizStarted(response.data.quizStarted);
         setCurrentQuestionIndex(response.data.currentQuestionIndex);
         setScore(response.data.score);
         setStudyTime(response.data.studyTime);
-
+  
         // チャプターが完了している場合は結果画面を表示
         if (response.data.completed) {
           setShowResults(true); // 完了状態に基づいて結果画面を表示
@@ -105,16 +113,28 @@ function Page2() {
           setShowResults(false); // 完了していない場合は結果画面を非表示
         }
       }
-
-      setIsLoading(false); // ローディング完了
+  
+      // ローディング完了
+      setIsLoading(false);
+  
+      // 状態を保存 (loadProgress の終了時に保存)
+      if (response.data) {
+        await saveProgress({ updateStartTime: true });
+      }
     } catch (error) {
       console.error('Error loading progress', error);
       setIsLoading(false);
     }
-  }, [chapterId]);
-
+  }, [chapterId, saveProgress]);
+  
+  // 初回ロードフラグ
+  const hasLoaded = useRef(false);
+  
   useEffect(() => {
-    loadProgress();
+    if (!hasLoaded.current) {
+      loadProgress();
+      hasLoaded.current = true; // 初回実行後にフラグを設定
+    }
   }, [loadProgress]);
 
   useEffect(() => {
