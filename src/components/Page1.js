@@ -31,18 +31,21 @@ function Page1() {
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
+  const startTimeRef = useRef(Date.now());
+
   const saveProgress = useCallback(async (options = {}) => {
     const { updateStartTime = false } = options;
+
     try {
       const endTime = Date.now();
-      let elapsed = Math.floor((endTime - startTime) / 1000);
-  
+      let elapsed = Math.floor((endTime - startTimeRef.current) / 1000);
+
       if (elapsed > 60) {
         elapsed = 60;
       }
-  
+
       const totalStudyTime = studyTime + elapsed;
-  
+
       await apiRequest('/api/progress/update', {
         method: 'POST',
         data: {
@@ -53,16 +56,16 @@ function Page1() {
           score: score,
           studyTime: totalStudyTime,
           completed: options.completed || false,
-        }
+        },
       });
-  
+
       if (updateStartTime) {
-        setStartTime(Date.now());
+        startTimeRef.current = Date.now();
       }
     } catch (error) {
       console.error('Error saving progress', error);
     }
-  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
+  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
   
 
   const completeChapter = useCallback(async () => {
@@ -119,7 +122,6 @@ function Page1() {
     }
   }, [chapterId, saveProgress]);
   
-
   useEffect(() => {
     loadProgress();
   }, [loadProgress]);
