@@ -47,11 +47,11 @@ function Page1() {
         method: 'POST',
         data: {
           chapterId: chapterId,
-          visibleStep: visibleStep,
-          quizStarted: quizStarted,
-          currentQuestionIndex: currentQuestionIndex,
-          score: score,
-          studyTime: totalStudyTime,
+          visibleStep: visibleStep || 0,
+          quizStarted: quizStarted || false,
+          currentQuestionIndex: currentQuestionIndex || 0,
+          score: score || 0,
+          studyTime: totalStudyTime || 0,
           completed: options.completed || false,
         }
       });
@@ -60,7 +60,7 @@ function Page1() {
         setStartTime(Date.now());
       }
     } catch (error) {
-      console.error('Error saving progress', error);
+      console.error('進捗保存エラー', error);
     }
   }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
   
