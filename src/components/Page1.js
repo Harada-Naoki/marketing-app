@@ -163,7 +163,7 @@ function Page1() {
   
     const intervalId = setInterval(() => {
       saveProgress({ updateStartTime: false });
-    }, 60000); 
+    }, 5000); 
   
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
