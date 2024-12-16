@@ -92,14 +92,14 @@ function Page1() {
       const response = await apiRequest(`/api/progress/${chapterId}`, {
         method: 'GET'
       });
-
+  
       if (response.data) {
         setVisibleStep(response.data.visibleStep);
         setQuizStarted(response.data.quizStarted);
         setCurrentQuestionIndex(response.data.currentQuestionIndex);
         setScore(response.data.score);
         setStudyTime(response.data.studyTime);
-
+  
         // チャプターが完了している場合は結果画面を表示
         if (response.data.completed) {
           setShowResults(true); // 完了状態に基づいて結果画面を表示
@@ -107,13 +107,18 @@ function Page1() {
           setShowResults(false); // 完了していない場合は結果画面を非表示
         }
       }
-
-      setIsLoading(false); // ローディング完了
+  
+      // ローディング完了
+      setIsLoading(false);
+  
+      // 状態を保存 (loadProgress の終了時に保存)
+      await saveProgress({ updateStartTime: true }); // 必要に応じて updateStartTime を変更可能
     } catch (error) {
       console.error('Error loading progress', error);
       setIsLoading(false);
     }
-  }, [chapterId]);
+  }, [chapterId, saveProgress]);
+  
 
   useEffect(() => {
     loadProgress();
