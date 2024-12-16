@@ -7,63 +7,66 @@ const router = express.Router();
 
 // 進捗を更新するエンドポイント
 router.post('/update', authenticateToken, async (req, res) => {
-  const { chapterId, visibleStep, quizStarted, currentQuestionIndex, score, completed, studyTime } = req.body;
+  const { 
+    chapterId, 
+    visibleStep = 0, 
+    quizStarted = false, 
+    currentQuestionIndex = 0, 
+    score = 0, 
+    completed = false, 
+    studyTime = 0 
+  } = req.body;
+
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send('ユーザーが見つかりません');
     }
 
-    // `progress`フィールドが存在しない場合に初期化
-    if (!user.progress) {
-      user.progress = [];
-    }
+    // progress配列が存在しない場合に初期化
+    user.progress = user.progress || [];
 
-    // 同じ chapterId を持つ進捗をすべて取得
-    let progressItems = user.progress.filter(p => p.chapterId === chapterId);
+    // 既存の進捗を検索
+    let progress = user.progress.find(p => p.chapterId === chapterId);
 
-    if (progressItems.length > 1) {
-      // visibleStep が少ない進捗を削除
-      const minVisibleStep = Math.min(...progressItems.map(p => p.visibleStep));
-      user.progress = user.progress.filter(p => !(p.chapterId === chapterId && p.visibleStep === minVisibleStep));
-      progressItems = user.progress.filter(p => p.chapterId === chapterId); // 削除後に再取得
-    }
-
-    // 既存の進捗を取得または新しい進捗を追加
-    let progress = progressItems[0];
     if (!progress) {
-      // 新しい進捗を追加する場合
-      progress = { chapterId, visibleStep: 0, quizStarted: false, currentQuestionIndex: 0, score: 0, completed: false, studyTime: 0 };
+      // 進捗エントリが存在しない場合に新規作成
+      progress = { 
+        chapterId, 
+        visibleStep: 0, 
+        quizStarted: false, 
+        currentQuestionIndex: 0, 
+        score: 0, 
+        completed: false, 
+        studyTime: 0 
+      };
       user.progress.push(progress);
     }
 
-    // 前の studyTime の保存
-    const previousStudyTime = progress.studyTime;
-
-    // 進捗を更新
-    progress.visibleStep = visibleStep !== undefined ? visibleStep : progress.visibleStep;
-    progress.quizStarted = quizStarted !== undefined ? quizStarted : progress.quizStarted;
-    progress.currentQuestionIndex = currentQuestionIndex !== undefined ? currentQuestionIndex : progress.currentQuestionIndex;
-    progress.score = score !== undefined ? score : progress.score;
-
-    // `completed` がすでに `true` である場合は、`false` に戻さない
-    if (!progress.completed) {
-      progress.completed = completed !== undefined ? completed : progress.completed;
+    // 進捗フィールドを更新
+    progress.visibleStep = Math.max(progress.visibleStep, visibleStep);
+    progress.quizStarted = quizStarted || progress.quizStarted;
+    progress.currentQuestionIndex = Math.max(progress.currentQuestionIndex, currentQuestionIndex);
+    progress.score = Math.max(progress.score, score);
+    
+    // completedがtrueの場合のみ更新
+    if (completed) {
+      progress.completed = true;
     }
 
-    // studyTime の修正
-    const newStudyTime = Math.max(studyTime - previousStudyTime, 0);
-    progress.studyTime = previousStudyTime + newStudyTime;
+    // studyTimeを慎重に計算
+    const newStudyTime = studyTime > progress.studyTime ? studyTime : progress.studyTime;
+    progress.studyTime = newStudyTime;
 
-    // すべてのチャプターのstudyTimeの合計を計算してtotalStudyTimeに設定
+    // 総学習時間を再計算
     user.totalStudyTime = user.progress.reduce((total, item) => total + item.studyTime, 0);
 
     await user.save();
 
-    res.status(200).send('Progress updated');
+    res.status(200).send('進捗が更新されました');
   } catch (error) {
-    console.error('Error updating progress:', error);
-    res.status(500).send('Error updating progress');
+    console.error('進捗更新エラー:', error);
+    res.status(500).send('進捗更新中にエラーが発生しました');
   }
 });
 
