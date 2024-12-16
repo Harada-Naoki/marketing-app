@@ -88,32 +88,36 @@ function Page1() {
   }, [navigate]);
 
   const loadProgress = useCallback(async () => {
-    try {
-      const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET'
-      });
+  try {
+    const response = await apiRequest(`/api/progress/${chapterId}`, {
+      method: 'GET'
+    });
 
-      if (response.data) {
-        setVisibleStep(response.data.visibleStep);
-        setQuizStarted(response.data.quizStarted);
-        setCurrentQuestionIndex(response.data.currentQuestionIndex);
-        setScore(response.data.score);
-        setStudyTime(response.data.studyTime);
+    if (response.data) {
+      // 既存の進捗データがある場合
+      setVisibleStep(response.data.visibleStep);
+      setQuizStarted(response.data.quizStarted);
+      setCurrentQuestionIndex(response.data.currentQuestionIndex);
+      setScore(response.data.score);
+      setStudyTime(response.data.studyTime);
 
-        // チャプターが完了している場合は結果画面を表示
-        if (response.data.completed) {
-          setShowResults(true); // 完了状態に基づいて結果画面を表示
-        } else {
-          setShowResults(false); // 完了していない場合は結果画面を非表示
-        }
+      // チャプターが完了している場合は結果画面を表示
+      if (response.data.completed) {
+        setShowResults(true);
+      } else {
+        setShowResults(false);
       }
-
-      setIsLoading(false); // ローディング完了
-    } catch (error) {
-      console.error('Error loading progress', error);
-      setIsLoading(false);
+    } else {
+      // 進捗データがない場合、saveProgressを呼び出す
+      await saveProgress();
     }
-  }, [chapterId]);
+
+    setIsLoading(false);
+  } catch (error) {
+    console.error('Error loading progress', error);
+    setIsLoading(false);
+  }
+}, [chapterId, saveProgress]);
 
   useEffect(() => {
     loadProgress();
