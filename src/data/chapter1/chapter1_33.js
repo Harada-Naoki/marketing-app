@@ -7,7 +7,7 @@ export const chapterOverview = "SNS広告はFacebook、Instagram、Twitter、LIN
 export const content = [
   {
     sender: "teacher",
-    text: "今日は『SNS広告』についてさらに詳しく学びましょう。SNS広告はFacebookやInstagram、Twitter、LineなどのSNSで配信される広告です。それぞれの特徴、ターゲット層、メリットやデメリットについて解説しますね。",
+    text: "今日は『SNS広告』についてさらに詳しく学びましょう。SNS広告はFacebookやInstagram、Twitter、LineなどのSNSで配信される広告です。それぞれの特徴やターゲット層について解説しますね。",
   },
   {
     sender: "teacher",
