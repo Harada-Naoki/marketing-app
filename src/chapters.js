@@ -34,7 +34,7 @@ export const chapters = [
         },
         {
           title: '予算配分（LTV・CPA・CPO）',
-          subSections: Array.from({ length: 7 }, (_, subIndex) => {
+          subSections: Array.from({ length: 5 }, (_, subIndex) => {
             const sectionData = require(`./data/chapter1/chapter1_${subIndex + 14}.js`);
             return {
               title: sectionData.title,
