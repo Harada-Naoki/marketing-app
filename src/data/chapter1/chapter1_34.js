@@ -16,7 +16,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: "/images/display_network_evolution.jpg",
+    src: "/images/images1/images1_34/img_1.jpg",
     alt: "ディスプレイネットワーク広告の進化",
   },
   {
