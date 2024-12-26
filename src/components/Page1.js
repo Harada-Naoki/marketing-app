@@ -78,84 +78,84 @@ function Page1() {
   }, [saveProgress]);
 
   // 初回ロードフラグ
-const hasLoaded = useRef(false);
+  const hasLoaded = useRef(false);
 
-const loadProgress = useCallback(async () => {
-  try {
-    // すでにロード済みの場合は処理をスキップ
-    if (hasLoaded.current) {
-      const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET',
-      });
+  const loadProgress = useCallback(async () => {
+    try {
+      // すでにロード済みの場合は処理をスキップ
+      if (hasLoaded.current) {
+        const response = await apiRequest(`/api/progress/${chapterId}`, {
+          method: 'GET',
+        });
 
-      if (response.data) {
-        // 既存の進捗データがある場合はそれを使用
-        setVisibleStep(response.data.visibleStep);
-        setQuizStarted(response.data.quizStarted);
-        setCurrentQuestionIndex(response.data.currentQuestionIndex);
-        setScore(response.data.score);
-        setStudyTime(response.data.studyTime);
-        
-        // 完了状態に基づいて結果画面の表示を制御
-        setShowResults(response.data.completed);
+        if (response.data) {
+          // 既存の進捗データがある場合はそれを使用
+          setVisibleStep(response.data.visibleStep);
+          setQuizStarted(response.data.quizStarted);
+          setCurrentQuestionIndex(response.data.currentQuestionIndex);
+          setScore(response.data.score);
+          setStudyTime(response.data.studyTime);
+          
+          // 完了状態に基づいて結果画面の表示を制御
+          setShowResults(response.data.completed);
+        } else {
+          // 進捗データがない場合のみ初期状態にリセット
+          setVisibleStep(0);
+          setQuizStarted(false);
+          setCurrentQuestionIndex(0);
+          setScore(0);
+          setShowFeedback(false);
+          setShowResults(false);
+          setStudyTime(0);
+        }
+
+        // 共通の初期化処理
+        setStartTime(Date.now());
+        setAllImagesLoaded(false);
+        setShowOverview(false);
       } else {
-        // 進捗データがない場合のみ初期状態にリセット
-        setVisibleStep(0);
-        setQuizStarted(false);
-        setCurrentQuestionIndex(0);
-        setScore(0);
-        setShowFeedback(false);
-        setShowResults(false);
-        setStudyTime(0);
+        // 初回ロード時の処理
+        const response = await apiRequest(`/api/progress/${chapterId}`, {
+          method: 'GET',
+        });
+
+        if (response.data) {
+          setVisibleStep(response.data.visibleStep);
+          setQuizStarted(response.data.quizStarted);
+          setCurrentQuestionIndex(response.data.currentQuestionIndex);
+          setScore(response.data.score);
+          setStudyTime(response.data.studyTime);
+          setShowResults(response.data.completed);
+        }
+
+        hasLoaded.current = true; // 初回ロード完了をマーク
       }
 
-      // 共通の初期化処理
-      setStartTime(Date.now());
-      setAllImagesLoaded(false);
-      setShowOverview(false);
-    } else {
-      // 初回ロード時の処理
-      const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET',
-      });
+      // ローディング完了
+      setIsLoading(false);
 
+      // 状態を保存
       if (response.data) {
-        setVisibleStep(response.data.visibleStep);
-        setQuizStarted(response.data.quizStarted);
-        setCurrentQuestionIndex(response.data.currentQuestionIndex);
-        setScore(response.data.score);
-        setStudyTime(response.data.studyTime);
-        setShowResults(response.data.completed);
+        await saveProgress({ updateStartTime: true });
       }
-
-      hasLoaded.current = true; // 初回ロード完了をマーク
+    } catch (error) {
+      console.error('Error loading progress', error);
+      setIsLoading(false);
     }
+  }, [chapterId, saveProgress]);
 
-    // ローディング完了
-    setIsLoading(false);
-
-    // 状態を保存
-    if (response.data) {
-      await saveProgress({ updateStartTime: true });
-    }
-  } catch (error) {
-    console.error('Error loading progress', error);
-    setIsLoading(false);
-  }
-}, [chapterId, saveProgress]);
-
-// URLパラメータの変更を監視
-useEffect(() => {
-  loadProgress();
-}, [chapterId, loadProgress]);
-
-// 初回ロード制御
-useEffect(() => {
-  if (!hasLoaded.current) {
+  // URLパラメータの変更を監視
+  useEffect(() => {
     loadProgress();
-  }
-}, [loadProgress]);
-  
+  }, [chapterId, loadProgress]);
+
+  // 初回ロード制御
+  useEffect(() => {
+    if (!hasLoaded.current) {
+      loadProgress();
+    }
+  }, [loadProgress]);
+    
   // チャプターIDが変更されたときの処理
   useEffect(() => {
     loadProgress();
