@@ -77,6 +77,91 @@ function Page1() {
     }
   }, [saveProgress]);
 
+  // 初回ロードフラグ
+const hasLoaded = useRef(false);
+
+const loadProgress = useCallback(async () => {
+  try {
+    // すでにロード済みの場合は処理をスキップ
+    if (hasLoaded.current) {
+      const response = await apiRequest(`/api/progress/${chapterId}`, {
+        method: 'GET',
+      });
+
+      if (response.data) {
+        // 既存の進捗データがある場合はそれを使用
+        setVisibleStep(response.data.visibleStep);
+        setQuizStarted(response.data.quizStarted);
+        setCurrentQuestionIndex(response.data.currentQuestionIndex);
+        setScore(response.data.score);
+        setStudyTime(response.data.studyTime);
+        
+        // 完了状態に基づいて結果画面の表示を制御
+        setShowResults(response.data.completed);
+      } else {
+        // 進捗データがない場合のみ初期状態にリセット
+        setVisibleStep(0);
+        setQuizStarted(false);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setShowFeedback(false);
+        setShowResults(false);
+        setStudyTime(0);
+      }
+
+      // 共通の初期化処理
+      setStartTime(Date.now());
+      setAllImagesLoaded(false);
+      setShowOverview(false);
+    } else {
+      // 初回ロード時の処理
+      const response = await apiRequest(`/api/progress/${chapterId}`, {
+        method: 'GET',
+      });
+
+      if (response.data) {
+        setVisibleStep(response.data.visibleStep);
+        setQuizStarted(response.data.quizStarted);
+        setCurrentQuestionIndex(response.data.currentQuestionIndex);
+        setScore(response.data.score);
+        setStudyTime(response.data.studyTime);
+        setShowResults(response.data.completed);
+      }
+
+      hasLoaded.current = true; // 初回ロード完了をマーク
+    }
+
+    // ローディング完了
+    setIsLoading(false);
+
+    // 状態を保存
+    if (response.data) {
+      await saveProgress({ updateStartTime: true });
+    }
+  } catch (error) {
+    console.error('Error loading progress', error);
+    setIsLoading(false);
+  }
+}, [chapterId, saveProgress]);
+
+// URLパラメータの変更を監視
+useEffect(() => {
+  loadProgress();
+}, [chapterId, loadProgress]);
+
+// 初回ロード制御
+useEffect(() => {
+  if (!hasLoaded.current) {
+    loadProgress();
+  }
+}, [loadProgress]);
+  
+  // チャプターIDが変更されたときの処理
+  useEffect(() => {
+    loadProgress();
+    startTimeRef.current = Date.now();
+  }, [chapterId, loadProgress]);
+
   const navigateToNextChapter = useCallback(() => {
     const nextChapterId = `1_${chapterIndex + 2}`;
     if (chapterIndex < CHAPTERS_COUNT - 1) {
@@ -86,54 +171,6 @@ function Page1() {
     }
   }, [chapterIndex, navigate]);
 
-  const navigateToHome = useCallback(() => {
-    navigate('/marketing-app');
-  }, [navigate]);
-
-  const loadProgress = useCallback(async () => {
-    try {
-      const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET',
-      });
-  
-      if (response.data) {
-        setVisibleStep(response.data.visibleStep);
-        setQuizStarted(response.data.quizStarted);
-        setCurrentQuestionIndex(response.data.currentQuestionIndex);
-        setScore(response.data.score);
-        setStudyTime(response.data.studyTime);
-  
-        // チャプターが完了している場合は結果画面を表示
-        if (response.data.completed) {
-          setShowResults(true); // 完了状態に基づいて結果画面を表示
-        } else {
-          setShowResults(false); // 完了していない場合は結果画面を非表示
-        }
-      }
-  
-      // ローディング完了
-      setIsLoading(false);
-  
-      // 状態を保存 (loadProgress の終了時に保存)
-      if (response.data) {
-        await saveProgress({ updateStartTime: true });
-      }
-    } catch (error) {
-      console.error('Error loading progress', error);
-      setIsLoading(false);
-    }
-  }, [chapterId, saveProgress]);
-  
-  // 初回ロードフラグ
-  const hasLoaded = useRef(false);
-  
-  useEffect(() => {
-    if (!hasLoaded.current) {
-      loadProgress();
-      hasLoaded.current = true; // 初回実行後にフラグを設定
-    }
-  }, [loadProgress]);
-  
   useEffect(() => {
     if (!isValidChapter) {
       navigate('/marketing-app');
