@@ -295,27 +295,27 @@ function Page1() {
           <BookOpen className="book-icon" size={50} />
           <h1 className="main-title">{title}</h1>
         </div>
-         <>
-           {visibleStep === 0 && (
-             <div className="overview-container">
-               <h2 className="overview-title">チャプター概要</h2>
-               <p className="overview-text">{chapterOverview}</p>
-             </div>
+        <>
+          {visibleStep === 0 && (
+            <div className="overview-container">
+              <h2 className="overview-title">チャプター概要</h2>
+              <p className="overview-text">{chapterOverview}</p>
+            </div>
             )}
             {visibleStep > 0 && (
               <>
                 <button onClick={() => setShowOverview(!showOverview)}>
-                 {showOverview ? '概要を閉じる' : '概要を見る'}
+                {showOverview ? '概要を閉じる' : '概要を見る'}
                 </button>
                 {showOverview && (
-                 <div className="overview-container">
-                   <h2 className="overview-title">チャプター概要</h2>
-                   <p className="overview-text">{chapterOverview}</p>
-                 </div>
+                <div className="overview-container">
+                  <h2 className="overview-title">チャプター概要</h2>
+                  <p className="overview-text">{chapterOverview}</p>
+                </div>
                 )}
-             </>
+            </>
             )}
-         </>
+        </>
       </div>
 
       <div className="progress-bar-container">
