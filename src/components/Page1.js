@@ -93,7 +93,7 @@ function Page1() {
   const loadProgress = useCallback(async () => {
     try {
       const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET'
+        method: 'GET',
       });
   
       if (response.data) {
@@ -115,16 +115,25 @@ function Page1() {
       setIsLoading(false);
   
       // 状態を保存 (loadProgress の終了時に保存)
-      await saveProgress({ updateStartTime: true }); // 必要に応じて updateStartTime を変更可能
+      if (response.data) {
+        await saveProgress({ updateStartTime: true });
+      }
     } catch (error) {
       console.error('Error loading progress', error);
       setIsLoading(false);
     }
   }, [chapterId, saveProgress]);
   
+  // 初回ロードフラグ
+  const hasLoaded = useRef(false);
+  
   useEffect(() => {
-    loadProgress();
+    if (!hasLoaded.current) {
+      loadProgress();
+      hasLoaded.current = true; // 初回実行後にフラグを設定
+    }
   }, [loadProgress]);
+  
 
   useEffect(() => {
     if (!isValidChapter) {
