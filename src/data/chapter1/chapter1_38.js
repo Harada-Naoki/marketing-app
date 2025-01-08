@@ -92,7 +92,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: "/images/images1/images1_38/img_1.jpg",
+    src: "/images/images1/images1_38/img_3.jpg",
     alt: "担当者ごとのチェック項目",
   },
   {

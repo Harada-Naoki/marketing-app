@@ -77,14 +77,60 @@ function Page1() {
     }
   }, [saveProgress]);
 
-  const navigateToNextChapter = useCallback(() => {
-    const nextChapterId = `1_${chapterIndex + 2}`;
-    if (chapterIndex < CHAPTERS_COUNT - 1) {
-      navigate(`/marketing-app/Page1/${nextChapterId}`);
-    } else {
-      navigate('/marketing-app');
+  const navigateToNextChapter = useCallback(async () => {
+    try {
+      // 現在のチャプターの進捗を保存
+      await saveProgress({ updateStartTime: false });
+  
+      // 次のチャプターのIDを設定
+      const nextChapterId = `1_${chapterIndex + 2}`;
+  
+      if (chapterIndex < CHAPTERS_COUNT - 1) {
+        // 状態を初期化
+        setVisibleStep(0);
+        setQuizStarted(false);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setShowFeedback(false);
+        setShowResults(false);
+        setStudyTime(0);
+        setIsLoading(true);
+  
+        // 新しいチャプターの進捗データを取得
+        const response = await apiRequest(`/api/progress/${nextChapterId}`, {
+          method: 'GET',
+        });
+  
+        if (response.data) {
+          // 進捗データがある場合
+          setVisibleStep(response.data.visibleStep || 0);
+          setQuizStarted(response.data.quizStarted || false);
+          setCurrentQuestionIndex(response.data.currentQuestionIndex || 0);
+          setScore(response.data.score || 0);
+          setStudyTime(response.data.studyTime || 0);
+          setShowResults(response.data.completed || false);
+        } else {
+          // 進捗データがない場合はリセットされた状態で新しいチャプターに移動
+          setVisibleStep(0);
+          setQuizStarted(false);
+          setCurrentQuestionIndex(0);
+          setScore(0);
+          setStudyTime(0);
+          setShowResults(false);
+        }
+  
+        // 新しいチャプターに移動
+        navigate(`/marketing-app/Page1/${nextChapterId}`);
+      } else {
+        // 最後のチャプターが終了した場合、ホームに戻る
+        navigate('/marketing-app');
+      }
+    } catch (error) {
+      console.error('Error navigating to next chapter', error);
+      setIsLoading(false); // エラーが発生した場合でもローディングを解除
     }
-  }, [chapterIndex, navigate]);
+  }, [chapterIndex, saveProgress, navigate]);
+  
 
   const navigateToHome = useCallback(() => {
     navigate('/marketing-app');
@@ -133,6 +179,12 @@ function Page1() {
       hasLoaded.current = true; // 初回実行後にフラグを設定
     }
   }, [loadProgress]);
+
+  useEffect(() => {
+    if (isValidChapter) {
+      loadProgress(); // chapterId または isValidChapter が変わるたびに進捗をロード
+    }
+  }, [chapterId, isValidChapter, loadProgress]);
   
   useEffect(() => {
     if (!isValidChapter) {
