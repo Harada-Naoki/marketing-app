@@ -1,11 +1,4 @@
-import marketing_1 from '../../images/images1/images1_1/marketing_1.jpeg';
-import marketing_2 from '../../images/images1/images1_1/marketing_2.jpeg';
-import marketing_3 from '../../images/images1/images1_1/marketing_3.jpeg';
-import marketing_4 from '../../images/images1/images1_1/marketing_4.jpeg';
-import marketing_5 from '../../images/images1/images1_1/marketing_5.png';
-import marketing_6 from '../../images/images1/images1_1/marketing_6.png';
-
-export const title = "「マーケティング」ってどう考えればいいの？ - チャプター 1";
+export const title = "「マーケティング」ってどう考えればいいの？";
 
 export const chapterOverview = "このチャプターでは、マーケティングの基本概念、現代のデジタルマーケティング、そしてマーケティングの重要なモデルと法則について学びます。";
 
@@ -33,7 +26,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_1,
+    src: "/images/images1/images1_1/marketing_1.jpeg", 
     alt: "売れ続ける仕組みづくり",
   },
   {
@@ -55,7 +48,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_2,
+    src: "/images/images1/images1_1/marketing_2.jpeg", 
     alt: "買いたい気持ちづくり",
   },
   {
@@ -78,7 +71,7 @@ export const content = [
   {
     sender: "teacher",
     type: "image",
-    src: marketing_3,
+    src: "/images/images1/images1_1/marketing_3.jpeg", 
     alt: "デジタル化",
   },
   {
@@ -112,20 +105,48 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: "まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています：\n1. Attention（注意）: 顧客の注意を引く。\n2. Interest（興味）: 顧客に興味を持たせる。\n3. Desire（欲求）: 商品やサービスへの欲求を喚起する。\n4. Memory（記憶）: 顧客の記憶に残る。\n5. Action（行動）: 実際に購入や行動を起こす。",
+    text: "まず、AIDMAモデルについて説明します。AIDMAは以下の5つのステップで構成されています。",
+  },
+  {
+    sender: "teacher",
+    type: "table",
+    tableData: {
+      headers: ["ステップ", "説明"],
+      rows: [
+        ["Attention（注意）", "顧客の注意を引く"],
+        ["Interest（興味）", "顧客に興味を持たせる"],
+        ["Desire（欲求）", "商品やサービスへの欲求を喚起する"],
+        ["Memory（記憶）", "顧客の記憶に残る"],
+        ["Action（行動）", "実際に購入や行動を起こす"],
+      ],
+    },
   },
   {
     sender: "student",
     text: "なるほど。AISASはどう違うんですか？",
   },
   {
+    sender: "student",
+    text: "AISASモデルは、デジタル時代に合わせて進化したマーケティングモデルです。以下の5つのステップからなります。",
+  },
+  {
     sender: "teacher",
-    text: "AISASモデルは、デジタル時代に合わせて進化したマーケティングモデルです。以下の5つのステップからなります：\n1. Attention（注意）: 顧客の注意を引く。\n2. Interest（興味）: 顧客に興味を持たせる。\n3. Search（検索）: 顧客が情報を検索する。\n4. Action（行動）: 実際に購入や行動を起こす。\n5. Share（共有）: 購入後にSNSなどで体験を共有する。",
+    type: "table",
+    tableData: {
+      headers: ["ステップ", "説明"],
+      rows: [
+        ["Attention（注意）", "顧客の注意を引く"],
+        ["Interest（興味）", "顧客に興味を持たせる"],
+        ["Search（検索）", "顧客が情報を検索する"],
+        ["Action（行動）", "実際に購入や行動を起こす"],
+        ["Share（共有）", "購入後にSNSなどで体験を共有する"],
+      ],
+    },
   },
   {
     sender: "teacher",
     type: "image",
-    src: marketing_4,
+    src: "/images/images1/images1_1/marketing_4.jpeg", 
     alt: "AIDMA/AISAS",
   },
   {
@@ -142,12 +163,26 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: "マーケティングファネルとは、顧客が商品を認知してから購入に至るまでの一連の段階を示すモデルです。以下の5つのステップで構成されています：\n1. 認知 (Attention): 顧客がCMや看板広告、ポスターなどで商品を認知する段階です。\n2. 興味 (Interest): 商品のことが気になり、商標に反応するようになる段階です。\n3. 欲求 (Desire): 顧客が商品を購入したいと思う段階です。\n4. 記憶 (Memory): 商品の良さや詳細を記憶する段階です。\n5. 行動 (Action): 実際に商品を購入する段階です。",
+    text: "マーケティングファネルとは、顧客が商品を認知してから購入に至るまでの一連の段階を示すモデルです。以下の5つのステップで構成されています。",
+  },
+  {
+    sender: "teacher",
+    type: "table",
+    tableData: {
+      headers: ["ステップ", "説明"],
+      rows: [
+        ["認知 (Attention)", "顧客がCMや看板広告、ポスターなどで商品を認知する段階"],
+        ["興味 (Interest)", "商品のことが気になり、商標に反応するようになる段階"],
+        ["欲求 (Desire)", "顧客が商品を購入したいと思う段階"],
+        ["記憶 (Memory)", "商品の良さや詳細を記憶する段階"],
+        ["行動 (Action)", "実際に商品を購入する段階"],
+      ],
+    },
   },
   {
     sender: "teacher",
     type: "image",
-    src: marketing_5,
+    src: "/images/images1/images1_1/marketing_5.png", 
     alt: "ファネル",
   },
   {
@@ -156,12 +191,22 @@ export const content = [
   },
   {
     sender: "teacher",
-    text: "パレートの法則とは、全体の結果の大部分が一部の要素によって生み出されるという現象を説明する法則です。マーケティングにおいては、顧客の2割が売上の8割を作るということを示しています。具体的には：\n1. 顧客の2割が、全体の売上の8割を占める。\n2. 残りの顧客の8割が、売上の2割を占める。",
+    text: "パレートの法則とは、全体の結果の大部分が一部の要素によって生み出されるという現象を説明する法則です。マーケティングにおいては、顧客の2割が売上の8割を作るということを示しています。",
+  },
+  {
+    sender: "teacher",
+    type: "table",
+    tableData: {
+      rows: [
+        ["1", "顧客の2割が、全体の売上の8割を占める"],
+        ["2", "残りの顧客の8割が、売上の2割を占める"],
+      ],
+    },
   },
   {
     sender: "teacher",
     type: "image",
-    src: marketing_6,
+    src: "/images/images1/images1_1/marketing_6.png", 
     alt: "パレートの法則",
   },
   {

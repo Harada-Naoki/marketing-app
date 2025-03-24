@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const app = require('./api/auth/index.js'); // パスはプロジェクトの構成に合わせて変更してください
+const connectDB = require('./config/db'); 
+const authRoutes = require('./routes/auth');
+const progressRoutes = require('./routes/progress');
 
-const port = process.env.PORT || 5000;
+const app = express();
+app.use(express.json());
 
 // CORSの設定
 app.use(cors({
@@ -13,22 +15,19 @@ app.use(cors({
 }));
 
 // MongoDBに接続
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected successfully');
-  } catch (err) {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1); // DB接続に失敗した場合はプロセスを終了
-  }
-};
-
 connectDB();
 
-// サーバーを起動
+
+// ルートの設定
+app.use('/api/auth', authRoutes);
+app.use('/api/progress', progressRoutes);
+
+// キープアライブ用エンドポイントの追加
+app.get('/keepalive', (req, res) => {
+  res.status(200).send('Server is alive');
+});
+
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

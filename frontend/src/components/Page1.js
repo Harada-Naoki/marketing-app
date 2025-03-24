@@ -6,7 +6,7 @@ import ChatBubble from '../components/ChatBubble';
 import QuizQuestion from '../components/QuizQuestion';
 import { BookOpen } from 'lucide-react';
 
-const CHAPTERS_COUNT = 7;
+const CHAPTERS_COUNT = 40;
 const chapterData = Array.from({ length: CHAPTERS_COUNT }, (_, i) => require(`../data/chapter1/chapter1_${i + 1}.js`));
 
 function Page1() {
@@ -23,22 +23,27 @@ function Page1() {
   const [showResults, setShowResults] = useState(false);
   const [studyTime, setStudyTime] = useState(0);
   const [startTime, setStartTime] = useState(Date.now());
-  const [inactiveStartTime, setInactiveStartTime] = useState(null);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
   const chatContainerRef = useRef(null);
-  const inactivityTimer = useRef(null);
-  const hasLoadedProgress = useRef(false); // 進捗がロードされたかどうかを追跡するフラグ
+  const [showOverview, setShowOverview] = useState(false);
 
   const isValidChapter = chapterIndex >= 0 && chapterIndex < CHAPTERS_COUNT;
   const chapter = isValidChapter ? chapterData[chapterIndex] : null;
 
+  const startTimeRef = useRef(Date.now());
+
   const saveProgress = useCallback(async (options = {}) => {
     const { updateStartTime = false } = options;
+
     try {
       const endTime = Date.now();
-      const elapsed = Math.floor((endTime - startTime) / 1000);
+      let elapsed = Math.floor((endTime - startTimeRef.current) / 1000);
+
+      if (elapsed > 60) {
+        elapsed = 60;
+      }
+
       const totalStudyTime = studyTime + elapsed;
 
       await apiRequest('/api/progress/update', {
@@ -51,21 +56,22 @@ function Page1() {
           score: score,
           studyTime: totalStudyTime,
           completed: options.completed || false,
-        }
+        },
       });
 
       if (updateStartTime) {
-        setStartTime(Date.now());
+        startTimeRef.current = Date.now();
       }
     } catch (error) {
       console.error('Error saving progress', error);
     }
-  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime, startTime]);
+  }, [chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
+  
 
   const completeChapter = useCallback(async () => {
     try {
       await saveProgress({ completed: true });
-      setShowResults(true);  // 完了後に結果表示画面に遷移
+      setShowResults(true);  
     } catch (error) {
       console.error('Error completing chapter', error);
     }
@@ -75,66 +81,94 @@ function Page1() {
     const nextChapterId = `1_${chapterIndex + 2}`;
     if (chapterIndex < CHAPTERS_COUNT - 1) {
       navigate(`/marketing-app/Page1/${nextChapterId}`);
-      window.location.reload();
     } else {
-      navigate('/');
+      navigate('/marketing-app');
     }
   }, [chapterIndex, navigate]);
 
   const navigateToHome = useCallback(() => {
-    navigate('/');
+    navigate('/marketing-app');
   }, [navigate]);
 
   const loadProgress = useCallback(async () => {
     try {
       const response = await apiRequest(`/api/progress/${chapterId}`, {
-        method: 'GET'
+        method: 'GET',
       });
-
+  
       if (response.data) {
         setVisibleStep(response.data.visibleStep);
         setQuizStarted(response.data.quizStarted);
         setCurrentQuestionIndex(response.data.currentQuestionIndex);
         setScore(response.data.score);
         setStudyTime(response.data.studyTime);
-
+  
         // チャプターが完了している場合は結果画面を表示
         if (response.data.completed) {
           setShowResults(true); // 完了状態に基づいて結果画面を表示
+        } else {
+          setShowResults(false); // 完了していない場合は結果画面を非表示
         }
       }
-
-      setIsLoading(false); // ローディング完了
+  
+      // ローディング完了
+      setIsLoading(false);
+  
+      // 状態を保存 (loadProgress の終了時に保存)
+      if (response.data) {
+        await saveProgress({ updateStartTime: true });
+      }
     } catch (error) {
       console.error('Error loading progress', error);
       setIsLoading(false);
     }
-  }, [chapterId]);
-
+  }, [chapterId, saveProgress]);
+  
+  // 初回ロードフラグ
+  const hasLoaded = useRef(false);
+  
   useEffect(() => {
-    loadProgress();
+    if (!hasLoaded.current) {
+      loadProgress();
+      hasLoaded.current = true; // 初回実行後にフラグを設定
+    }
   }, [loadProgress]);
+  
 
   useEffect(() => {
     if (!isValidChapter) {
-      navigate('/'); 
+      navigate('/marketing-app');
       return;
     }
-
+  
     const handleInactivity = () => {
-      setInactiveStartTime(Date.now());
-      if (hasLoadedProgress.current) { 
-        saveProgress();
-      }
+      saveProgress({ updateStartTime: false });
     };
-
-    const resetInactivityTimer = () => {
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-      inactivityTimer.current = setTimeout(handleInactivity, 180000);
+  
+    const handleActivityResume = () => {
+      setStartTime(Date.now());
     };
-
+  
+    const handlePageHide = (event) => {
+      const data = JSON.stringify({
+        chapterId: chapterId,
+        visibleStep: visibleStep,
+        quizStarted: quizStarted,
+        currentQuestionIndex: currentQuestionIndex,
+        score: score,
+        studyTime: studyTime,
+        completed: false,
+      });
+  
+      const url = '/api/progress/update';
+      
+      navigator.sendBeacon(url, data);
+    };
+  
+    const handlePopState = () => {
+      saveProgress({ updateStartTime: false });
+    };
+  
     const handleVisibilityChange = () => {
       if (document.hidden) {
         handleInactivity();
@@ -142,45 +176,28 @@ function Page1() {
         handleActivityResume();
       }
     };
-
-    const handleActivityResume = () => {
-      if (inactiveStartTime) {
-        const inactiveEndTime = Date.now();
-        const inactiveDuration = Math.floor((inactiveEndTime - inactiveStartTime) / 1000);
-        setInactiveStartTime(null);
-        setStartTime(prevTime => prevTime + inactiveDuration * 1000);
-      }
-      setStartTime(Date.now());
-      resetInactivityTimer();
-    };
-
+  
+    const intervalId = setInterval(() => {
+      saveProgress({ updateStartTime: false });
+    }, 5000); 
+  
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleActivityResume);
     window.addEventListener('blur', handleInactivity);
-    ['mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(event => {
-      window.addEventListener(event, resetInactivityTimer);
-    });
-
-    const hasLoaded = hasLoadedProgress.current; 
-
+    window.addEventListener('pagehide', handlePageHide); 
+    window.addEventListener('popstate', handlePopState); 
+  
     return () => {
+      clearInterval(intervalId); 
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleActivityResume);
       window.removeEventListener('blur', handleInactivity);
-      ['mousemove', 'keydown', 'touchstart', 'touchmove'].forEach(event => {
-        window.removeEventListener(event, resetInactivityTimer);
-      });
-
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
-      }
-
-      if (hasLoaded) { 
-        saveProgress();
-      }
+      window.removeEventListener('pagehide', handlePageHide); 
+      window.removeEventListener('popstate', handlePopState); 
     };
-  }, [isValidChapter, startTime, studyTime, inactiveStartTime, saveProgress, navigate]);
-
+  }, [isValidChapter, saveProgress, navigate, chapterId, visibleStep, quizStarted, currentQuestionIndex, score, studyTime]);
+  
+  
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -227,15 +244,14 @@ function Page1() {
 
   const showNextStep = useCallback(() => {
     if (visibleStep < chapter.content.length - 1) {
-      setVisibleStep(prev => prev + 1);
-      setAllImagesLoaded(false);
-      saveProgress({ updateStartTime: true });
+      setVisibleStep(prev => prev + 1); 
+      setAllImagesLoaded(false); 
     } else {
-      setQuizStarted(true);
-      saveProgress({ updateStartTime: true });
+      setQuizStarted(true); 
+      setShowFeedback(false); 
     }
-  }, [visibleStep, chapter, saveProgress]);
-
+  }, [visibleStep, chapter]);
+  
   const handleQuizAnswer = useCallback((selectedAnswer) => {
     const currentQuestion = chapter.quizQuestions[currentQuestionIndex];
     const correct = selectedAnswer === currentQuestion.correctAnswer;
@@ -244,33 +260,29 @@ function Page1() {
     if (correct) {
       setScore(prev => prev + 1);
     }
-    saveProgress();
-  }, [chapter, currentQuestionIndex, saveProgress]);
-
+  }, [chapter, currentQuestionIndex]);
+  
   const nextQuestion = useCallback(() => {
     setShowFeedback(false);
     if (currentQuestionIndex < chapter.quizQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex(prev => prev + 1); 
     } else {
-      setShowResults(true);
+      setShowResults(true); 
     }
-    saveProgress();
-  }, [currentQuestionIndex, chapter, saveProgress]);
-
+  }, [currentQuestionIndex, chapter]);
+  
   const resetQuiz = useCallback(async () => {
     try {
-      await saveProgress();
-
       setScore(0);
       setCurrentQuestionIndex(0);
-      setShowResults(false); // 結果画面を閉じる
+      setShowFeedback(false);
+      setShowResults(false);
+      
     } catch (error) {
       console.error('Error resetting quiz', error);
     }
   }, [saveProgress]);
-
   
-
   if (!isValidChapter) return null;
   if (isLoading) return <div>Loading...</div>;
 
@@ -284,13 +296,27 @@ function Page1() {
           <BookOpen className="book-icon" size={50} />
           <h1 className="main-title">{title}</h1>
         </div>
-
-        {visibleStep === 0 && (
-          <div className="overview-container">
-            <h2 className="overview-title">チャプター概要</h2>
-            <p className="overview-text">{chapterOverview}</p>
-          </div>
-        )}
+        <>
+          {visibleStep === 0 && (
+            <div className="overview-container">
+              <h2 className="overview-title">チャプター概要</h2>
+              <p className="overview-text">{chapterOverview}</p>
+            </div>
+            )}
+            {visibleStep > 0 && (
+              <>
+                <button onClick={() => setShowOverview(!showOverview)}>
+                {showOverview ? '概要を閉じる' : '概要を見る'}
+                </button>
+                {showOverview && (
+                <div className="overview-container">
+                  <h2 className="overview-title">チャプター概要</h2>
+                  <p className="overview-text">{chapterOverview}</p>
+                </div>
+                )}
+            </>
+            )}
+        </>
       </div>
 
       <div className="progress-bar-container">
@@ -304,7 +330,14 @@ function Page1() {
               {item.type === "sectionTitle" ? (
                 <h3 className="section-title">{item.text}</h3>
               ) : (
-                <ChatBubble sender={item.sender} type={item.type} text={item.text} src={item.src} alt={item.alt} />
+                <ChatBubble
+                sender={item.sender}
+                type={item.type}
+                text={item.text}
+                src={item.src}
+                alt={item.alt}
+                tableData={item.tableData}  
+              />
               )}
             </div>
           ))}
@@ -342,9 +375,14 @@ function Page1() {
 
       {!showResults && (
         <div className="links-container">
-         <Link to="/">ホームに戻る</Link>
+          <Link 
+          to="/marketing" 
+          onClick={() => saveProgress({ updateStartTime: false })}
+          >
+            ホームに戻る
+          </Link>
         </div>
-    )}
+      )}
     </div>
   );
 }

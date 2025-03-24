@@ -9,6 +9,10 @@ body {
   height: 100vh;
 }
 
+ul li {
+  list-style: none;
+}
+
 /* フォーム */
 .form-container {
   background-color: #fff;
@@ -16,8 +20,11 @@ body {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
-  width: 100%;
   margin: 40px auto;
+}
+
+.App {
+  margin: 0 20px;
 }
 
 .form-container h2 {
@@ -41,8 +48,10 @@ input[type="text"],
 input[type="password"] {
   padding: 10px;
   margin-bottom: 15px;
+  margin-left: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 .form-container button {
@@ -81,7 +90,7 @@ input[type="password"] {
 .home-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px 0;
   font-family: Arial, sans-serif;
 }
 
@@ -106,9 +115,8 @@ input[type="password"] {
   margin-right: 0.5rem;
 }
 
-
 .content-navigation {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .content-list {
@@ -117,77 +125,82 @@ input[type="password"] {
 }
 
 .content-item {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-
-.Collapsible__contentInner ul {
-  list-style: none;
-  padding: inherit;
-}
-
 
 .collapsible-trigger {
+  background-color: #6c5ce7;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #e9ecef;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-  color: #333;
 }
 
 .collapsible-trigger:hover {
-  background-color: #d0d4d9;
+  background-color: #5b47d1;
 }
 
-.chevron-icon {
-  transition: transform 0.3s ease;
+.content-item-sub {
+  /* margin-left: 20px; */
+  margin-top: 10px;
 }
 
-.collapsible-trigger[aria-expanded="true"] .chevron-icon {
-  transform: rotate(180deg);
+.collapsible-trigger-sub {
+  background-color: #74b9ff;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: small;
 }
 
-.content-link {
-  display: block;
-  padding: 10px 15px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  color: #495057;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  border-radius: 4px;
+.collapsible-trigger-sub:hover {
+  background-color: #0984e3;
+}
+
+.content-item-sub2 {
+  /* margin-left: 35px; */
   margin-top: 5px;
 }
 
+.content-link {
+  color: #2d3436;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 4px;
+  transition: all 0.3s;
+  font-size: smaller;
+}
+
+.content-link:hover {
+  background-color: #dfe6e9;
+}
+
 .content-link.completed {
-  background-color: #727272;
-  color: #ffffff;
-}
-
-.content-link.completed:hover {
-  background-color: #666666;
-  color: #000000;
-}
-
-.content-link.incomplete {
-  background-color: #ffffff;
-  color: #495057;
-}
-
-.content-link.incomplete:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  color: #007bff;
+  background-color: gray;
 }
 
 .completion-status {
   font-size: 0.8em;
-  font-weight: bold;
-  margin-left: 10px;
+  color: #00b894;
+  margin-left: 5px;
 }
+
+/* アイコンのプレースホルダー */
+.icon-chapter::before { content: "📚"; }
+.icon-section::before { content: "📂"; }
+.icon-page::before { content: "📄"; }
 
 /* アニメーション効果 */
 @keyframes fadeIn {
@@ -199,20 +212,6 @@ input[type="password"] {
   animation: fadeIn 0.3s ease-out;
   border-radius: 0 0 4px 4px;
 }
-
-/* 各章の背景色を変える */
-.content-item:nth-child(3n+1) .collapsible-trigger {
-  background-color: #e3f2fd;
-}
-
-.content-item:nth-child(3n+2) .collapsible-trigger {
-  background-color: #e8f5e9;
-}
-
-.content-item:nth-child(3n+3) .collapsible-trigger {
-  background-color: #fff3e0;
-}
-
 
 /* 学習進捗 */
 /* 全体のコンテナ */
@@ -246,6 +245,7 @@ input[type="password"] {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
+  font-size: medium;
 }
 
 .progress-item-container:nth-child(3n+1) .progress-chapter::before {
@@ -263,6 +263,10 @@ input[type="password"] {
   margin-right: 0.5rem;
 }
 
+.progress-item-container:last-child {
+  margin-bottom: 20px;
+}
+
 /* 進捗リスト */
 .progress-list-container {
   padding: 0;
@@ -275,6 +279,20 @@ input[type="password"] {
 }
 
 /* 進捗アイテム */
+.progress-section {
+  background-color: #74b9ff;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: small;
+}
+
 .progress-item {
   background-color: white;
   padding: 1rem;
@@ -285,6 +303,11 @@ input[type="password"] {
   align-items: center;
   margin-bottom: 0.75rem;
   transition: all 0.3s ease;
+  font-size: smaller;
+}
+
+.progress-item:first-child {
+  margin-top: .75rem;
 }
 
 .progress-item:hover {
@@ -298,7 +321,6 @@ input[type="password"] {
 }
 
 .chapter-id {
-  font-size: 1.125rem;
   font-weight: 600;
 }
 
@@ -341,15 +363,11 @@ input[type="password"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: medium;
 }
 
 .total-time-label {
-  font-size: 1.125rem;
   font-weight: bold;
-}
-
-.total-time-value {
-  font-size: 1.25rem;
 }
 
 /* ログアウトボタン */
@@ -373,7 +391,7 @@ input[type="password"] {
 
 /* Page */
 .Content {
-  margin: 20px;
+  margin: 20px 0;
   position: relative;
   min-height: 100vh;
   padding-bottom: 60px; /* Add padding to the bottom to make space for the button */
@@ -382,7 +400,7 @@ input[type="password"] {
 .chapter-header {
   max-width: 600px;
   margin: 0 auto 20px;
-  padding: 1.5rem;
+  padding: 15px;
   background: linear-gradient(to bottom right, #e6f3ff, #e8eaff);
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -391,7 +409,6 @@ input[type="password"] {
 .title-container {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .book-icon {
@@ -400,7 +417,7 @@ input[type="password"] {
 }
 
 .main-title {
-  font-size: 1.875rem;
+  font-size: large;
   font-weight: bold;
   color: #3730a3;
 }
@@ -512,6 +529,22 @@ input[type="password"] {
   border-bottom: 10px solid transparent;
 }
 
+.chat-bubble.teacher table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px;
+}
+
+.chat-bubble.teacher th, .chat-bubble.teacher td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.chat-bubble.teacher th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
 .icon {
   max-width: 60px;
   height: 60px;
@@ -520,7 +553,7 @@ input[type="password"] {
 }
 
 .image {
-  max-width: 60%;
+  max-width: 70%;
   height: auto;
   border-radius: 10px;
   background: #f1f1f1;
@@ -658,3 +691,37 @@ input[type="password"] {
   background-color: #45a049; /* ホバー時の背景色 */
 }
 
+ul {
+  padding: 0 !important;
+}
+
+/* モーダルの背景（全画面表示時） */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* 半透明の黒背景 */
+}
+
+/* 閉じるボタン */
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-image {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}

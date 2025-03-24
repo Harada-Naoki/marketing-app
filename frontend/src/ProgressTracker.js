@@ -3,6 +3,7 @@ import apiRequest from './utils/apiRequest';
 import './App.css';
 import Collapsible from 'react-collapsible';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
+import { chapters } from './chapters';  // chapters.js からデータをインポート
 
 const formatTime = (seconds) => {
   const h = Math.floor(seconds / 3600);
@@ -11,84 +12,102 @@ const formatTime = (seconds) => {
   return `${h}時間 ${m}分 ${s}秒`;
 };
 
-const parseChapterId = (chapterId) => {
-  const parts = chapterId.split('_');
-  return {
-    prefix: parseInt(parts[0], 10),
-    suffix: parseInt(parts[1], 10)
-  };
+// 同じ chapterId の進捗データを取得
+const getProgressForChapter = (progress, chapterId) => {
+  return progress.find((item) => item.chapterId === chapterId) || null;
 };
 
-// 同じ chapterId の進捗を studyTime に基づいてフィルタリング
-const filterProgressByStudyTime = (progress) => {
-  const filteredProgress = progress.reduce((acc, item) => {
-    if (!acc[item.chapterId] || acc[item.chapterId].studyTime < item.studyTime) {
-      acc[item.chapterId] = item;
-    }
-    return acc;
-  }, {});
+// サブカテゴリごとの勉強時間の合計を計算
+const calculateSectionStudyTime = (progress, subSections) => {
+  if (!subSections || !Array.isArray(subSections)) {
+    return 0;
+  }
+  return subSections.reduce((total, subSection) => {
+    const subSectionProgress = getProgressForChapter(progress, subSection.chapterId);
+    return subSectionProgress ? total + subSectionProgress.studyTime : total;
+  }, 0);
+};
 
-  return Object.values(filteredProgress);
+// 章全体の勉強時間の合計を計算
+const calculateChapterStudyTime = (progress, sections) => {
+  if (!sections || !Array.isArray(sections)) {
+    return 0;
+  }
+  return sections.reduce((total, section) => {
+    const sectionStudyTime = calculateSectionStudyTime(progress, section.subSections);
+    return total + sectionStudyTime;
+  }, 0);
 };
 
 const ProgressTracker = () => {
   const [progress, setProgress] = useState([]);
   const [totalStudyTime, setTotalStudyTime] = useState(0);
   const [activeChapter, setActiveChapter] = useState(null);
+  const [activeSubIndex, setActiveSubIndex] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
 
+  // 進捗データを取得する関数
+  const fetchProgress = async () => {
+    try {
+      const response = await apiRequest('/api/progress/status');
+      if (response.data && Array.isArray(response.data.progress)) {
+        setProgress(response.data.progress);
+        setTotalStudyTime(response.data.totalStudyTime);
+      } else {
+        setErrorMessage('Progress data is not available or not an array.');
+      }
+    } catch (error) {
+      setErrorMessage(`Error fetching progress: ${error.message}`);
+    }
+  };
+
+  // ページが初めて表示された時と「戻る」ボタンが押された時に進捗を取得
   useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const response = await apiRequest('/api/progress/status');
-        // console.log('API response:', response);
+    fetchProgress();
 
-        if (response.data && Array.isArray(response.data.progress)) {
-          // 同じ chapterId の進捗をフィルタリング
-          const filteredProgress = filterProgressByStudyTime(response.data.progress);
+    // popstateイベントでブラウザ履歴が変更された時に進捗を再取得
+    const handlePopState = () => {
+      fetchProgress();
+    };
 
-          // 進捗をソート
-          const sortedProgress = filteredProgress.sort((a, b) => {
-            const chapterA = parseChapterId(a.chapterId);
-            const chapterB = parseChapterId(b.chapterId);
+    window.addEventListener('popstate', handlePopState);
 
-            if (chapterA.prefix !== chapterB.prefix) {
-              return chapterA.prefix - chapterB.prefix;
-            }
-            return chapterA.suffix - chapterB.suffix;
-          });
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
-          setProgress(sortedProgress);
-          setTotalStudyTime(response.data.totalStudyTime);
-        } else {
-          const message = 'Progress data is not available or not an array.';
-          console.error(message);
-          setErrorMessage(message);
-        }
-      } catch (error) {
-        console.error('Error fetching progress:', error);
-        setErrorMessage(`Error fetching progress: ${error.message}`);
+  // ページが再表示された時に進捗をリロードする
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchProgress(); // ページが再表示された時に進捗を再取得
       }
     };
 
-    fetchProgress();
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
-  const handleToggle = (chapterPrefix) => {
-    setActiveChapter(activeChapter === chapterPrefix ? null : chapterPrefix);
+  const handleToggle = (chapterIndex) => {
+    setActiveChapter(activeChapter === chapterIndex ? null : chapterIndex);
   };
 
-  const groupedProgress = progress?.reduce((acc, item) => {
-    const { prefix } = parseChapterId(item.chapterId);
-    if (!acc[prefix]) acc[prefix] = [];
-    acc[prefix].push(item);
-    return acc;
-  }, {}) || {};
+  const handleSubToggle = (chapterIndex, sectionIndex) => {
+    setActiveSubIndex((prev) => ({
+      ...prev,
+      [chapterIndex]: prev[chapterIndex] === sectionIndex ? null : sectionIndex,
+    }));
+  };
 
   return (
     <div className='progress-container'>
       <h2 className='progress-title'>学習の進捗状況</h2>
-      
+
       {errorMessage && (
         <div className='error-message'>
           <p>{errorMessage}</p>
@@ -96,41 +115,101 @@ const ProgressTracker = () => {
       )}
 
       <ul className='progress-list-container'>
-        {Object.keys(groupedProgress).length > 0 ? (
-          Object.keys(groupedProgress).map((prefix) => (
-            <li key={prefix} className='progress-item-container'>
-              <div
-                className='progress-chapter'
-                onClick={() => handleToggle(prefix)}
-              >
-                第{prefix}章
-                {activeChapter === prefix ? (
-                  <FiChevronDown className='chevron-icon' />
-                ) : (
-                  <FiChevronRight className='chevron-icon' />
-                )}
-              </div>
-              <Collapsible open={activeChapter === prefix}>
-                <ul className='progress-list'>
-                  {groupedProgress[prefix].map((item, index) => (
-                    <li key={index} className='progress-item'>
-                      <div className='chapter-info'>
-                        <span className='chapter-id'>チャプター {item.chapterId}</span>
-                        <span className={`chapter-status ${item.completed ? 'status-completed' : 'status-incomplete'}`}>
-                          {item.completed ? '完了' : '未完了'}
-                        </span>
-                      </div>
-                      <span className='study-time'>
-                        勉強時間: {formatTime(item.studyTime)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Collapsible>
-            </li>
-          ))
+        {chapters?.length > 0 ? (
+          chapters.map((chapter, chapterIndex) => {
+            const chapterStudyTime = calculateChapterStudyTime(progress, chapter.sections);
+
+            return (
+              <li key={chapterIndex} className='progress-item-container'>
+                <div
+                  className='progress-chapter'
+                  onClick={() => handleToggle(chapterIndex)}
+                >
+                  {chapter.title}
+                  <span className='study-time-chapter'>
+                    <span className='study-time'>
+                      : {formatTime(chapterStudyTime)}
+                    </span>
+                  </span>
+                  {activeChapter === chapterIndex ? (
+                    <FiChevronDown className='chevron-icon' />
+                  ) : (
+                    <FiChevronRight className='chevron-icon' />
+                  )}
+                </div>
+                <Collapsible open={activeChapter === chapterIndex}>
+                  <ul className='progress-list'>
+                    {chapter.sections?.length > 0 ? chapter.sections.map((section, sectionIndex) => {
+                      const sectionStudyTime = calculateSectionStudyTime(progress, section.subSections);
+
+                      return (
+                        <li key={sectionIndex} className='progress-item-container'>
+                          <div
+                            className='progress-section'
+                            onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
+                          >
+                            {section.title}
+                            {activeSubIndex[chapterIndex] === sectionIndex ? (
+                              <FiChevronDown className='chevron-icon' />
+                            ) : (
+                              <FiChevronRight className='chevron-icon' />
+                            )}
+                            <span className='study-time-section'>
+                            <span className='study-time'>
+                              : {formatTime(sectionStudyTime)}
+                              </span>
+                            </span>
+                          </div>
+                          <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
+                            <ul>
+                              {section.subSections?.length > 0 ? section.subSections.map((subSection, subIndex) => {
+                                const subSectionProgress = getProgressForChapter(progress, subSection.chapterId);
+
+                                // 進捗データがない場合は何も表示しない
+                                if (!subSectionProgress) return null;
+
+                                return (
+                                  <li key={subIndex} className='progress-item'>
+                                    <div className='chapter-info'>
+                                      <span className='chapter-id'>
+                                        {subSection.title}
+                                      </span>
+                                      <span
+                                        className={`chapter-status ${
+                                          subSectionProgress.completed
+                                            ? 'status-completed'
+                                            : 'status-incomplete'
+                                        }`}
+                                      >
+                                        {subSectionProgress.completed ? '完了' : '未完了'}
+                                      </span>
+                                    </div>
+                                    <span className='study-time'>
+                                      : {formatTime(subSectionProgress.studyTime)}
+                                    </span>
+                                  </li>
+                                );
+                              }) : (
+                                <li className='progress-item'>
+                                  <p>No subSections available.</p>
+                                </li>
+                              )}
+                            </ul>
+                          </Collapsible>
+                        </li>
+                      );
+                    }) : (
+                      <li className='progress-item'>
+                        <p>No sections available.</p>
+                      </li>
+                    )}
+                  </ul>
+                </Collapsible>
+              </li>
+            );
+          })
         ) : (
-          <p>No progress data available.</p>
+          <p>No chapters available.</p>
         )}
       </ul>
       <div className='total-study-time'>

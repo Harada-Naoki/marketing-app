@@ -13,7 +13,7 @@ const refreshAccessToken = async (refreshToken) => {
   }
 };
 
-const apiRequest = async (url, options = {}) => {
+const apiRequest = async (url, options = {}, navigate) => {
   let token = localStorage.getItem('token');
   const refreshToken = localStorage.getItem('refreshToken');
 
@@ -51,7 +51,7 @@ const apiRequest = async (url, options = {}) => {
         }
       } else {
         console.error('Token refresh failed');
-        window.location.href = '/marketing-app/login';
+        navigate('/');  
       }
     } else {
       throw error;

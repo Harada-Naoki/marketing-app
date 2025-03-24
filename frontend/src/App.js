@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import Collapsible from 'react-collapsible';
 import apiRequest from './utils/apiRequest';
+import KeepAlive from './utils/KeepAlive';
 import './App.css';
 import Page1 from './components/Page1';
 import Page2 from './components/Page2';  
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import ProgressTracker from './ProgressTracker';
+import { chapters } from './chapters'; 
 
 // 認証チェック
 const isAuthenticated = () => !!localStorage.getItem('token');
 
 // ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/marketing-app/login" />;
+  return isAuthenticated() ? element : <Navigate to="/" />;
 };
 
 // chapterId を解析して prefix と suffix を取得
@@ -27,35 +30,13 @@ const parseChapterId = (chapterId) => {
   };
 };
 
-// dataフォルダからチャプターデータを動的にインポート
-const chapters = [
-  {
-    title: '第1章',
-    sections: Array.from({ length: 7 }, (_, sectionIndex) => {
-      const sectionData = require(`./data/chapter1/chapter1_${sectionIndex + 1}.js`);
-      return {
-        title: sectionData.title,
-        chapterId: `1_${sectionIndex + 1}`
-      };
-    })
-  },
-  {
-    title: '第2章',
-    sections: Array.from({ length: 2 }, (_, sectionIndex) => {
-      const sectionData = require(`./data/chapter2/chapter2_${sectionIndex + 1}.js`);
-      return {
-        title: sectionData.title,
-        chapterId: `2_${sectionIndex + 1}`
-      };
-    })
-  }
-];
-
 // HomePageコンポーネント
 const HomePage = ({ onLogout }) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [activeSubIndex, setActiveSubIndex] = useState({});
   const [progress, setProgress] = useState([]);
 
+  // プログレスの取得と並び替え
   useEffect(() => {
     const fetchProgress = async () => {
       try {
@@ -78,37 +59,54 @@ const HomePage = ({ onLogout }) => {
     fetchProgress();
   }, []);
 
+  // チャプターの展開/折りたたみのトグル
   const handleToggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  // セクションの展開/折りたたみのトグル
+  const handleSubToggle = (chapterIndex, sectionIndex) => {
+    setActiveSubIndex((prev) => ({
+      ...prev,
+      [chapterIndex]: prev[chapterIndex] === sectionIndex ? null : sectionIndex,
+    }));
+  };
+
+  // プログレスの取得
   const getProgress = (chapterPrefix, sectionSuffix) => {
     const chapterId = `${chapterPrefix}_${sectionSuffix}`;
     return (
-      progress.find(item => item.chapterId === chapterId) || {
+      progress.find((item) => item.chapterId === chapterId) || {
         visibleStep: 0,
         quizStarted: false,
         currentQuestionIndex: 0,
         score: 0,
         completed: false,
-        studyTime: 0
+        studyTime: 0,
       }
     );
   };
 
   return (
     <div className="home-container">
+      {/* Progress Tracker Component */}
       <ProgressTracker />
+
+      {/* Main Content Section */}
       <div className="content-section">
         <h1 className="content-title">目次</h1>
+
+        {/* Navigation for Chapters */}
         <nav className="content-navigation">
           <ul className="content-list">
-            {chapters.map((chapter, chapterIndex) => (
+            {chapters.length > 0 && chapters.map((chapter, chapterIndex) => (
               <li className="content-item" key={chapterIndex}>
+                {/* Chapter Title (Collapsible Trigger) */}
                 <div
                   className="collapsible-trigger"
                   onClick={() => handleToggle(chapterIndex)}
                 >
+                  <span className="icon-chapter"></span>
                   {chapter.title}
                   {activeIndex === chapterIndex ? (
                     <FiChevronDown className="chevron-icon" />
@@ -116,59 +114,98 @@ const HomePage = ({ onLogout }) => {
                     <FiChevronRight className="chevron-icon" />
                   )}
                 </div>
-                <Collapsible open={activeIndex === chapterIndex}>
-                  <ul>
-                    {chapter.sections.map((section, sectionIndex) => {
-                      const sectionProgress = getProgress(chapterIndex + 1, sectionIndex + 1);
-                      return (
-                        <li className="content-item" key={sectionIndex}>
-                          <Link
-                            to={`/marketing-app/Page${chapterIndex + 1}/${section.chapterId}`}
-                            className={`content-link ${
-                              sectionProgress && sectionProgress.completed ? 'completed' : 'incomplete'
-                            }`}
+
+                {/* Collapsible Sections under Chapter */}
+                {chapter.sections && chapter.sections.length > 0 && (
+                  <Collapsible open={activeIndex === chapterIndex}>
+                    <ul>
+                      {chapter.sections.map((section, sectionIndex) => (
+                        <li className="content-item-sub" key={sectionIndex}>
+                          {/* Section Title (Collapsible Trigger for Subsections) */}
+                          <div
+                            className="collapsible-trigger-sub"
+                            onClick={() => handleSubToggle(chapterIndex, sectionIndex)}
                           >
+                            <span className="icon-section"></span>
                             {section.title}
-                            <span className="completion-status">
-                              {/* {sectionProgress.completed ? '(済)' : 
-                               sectionProgress.quizStarted ? `(クイズ中 ${sectionProgress.currentQuestionIndex + 1}/${chapter.sections[sectionIndex].quizQuestions?.length || 0})` :
-                               sectionProgress.visibleStep > 0 ? `(${sectionProgress.visibleStep}/${chapter.sections[sectionIndex].content?.length || 0})` : ''} */}
-                               {sectionProgress.completed ? '(済)' : ''}
-                            </span>
-                          </Link>
+                            {activeSubIndex[chapterIndex] === sectionIndex ? (
+                              <FiChevronDown className="chevron-icon" />
+                            ) : (
+                              <FiChevronRight className="chevron-icon" />
+                            )}
+                          </div>
+
+                          {/* Collapsible Subsections under Section */}
+                          {section.subSections && section.subSections.length > 0 && (
+                            <Collapsible open={activeSubIndex[chapterIndex] === sectionIndex}>
+                              <ul>
+                                {section.subSections.map((subSection, subIndex) => {
+                                  // `chapterId` を `1_1` から `1_20` までの範囲で生成
+                                  const subSectionProgress = getProgress(
+                                    chapterIndex + 1,
+                                    subSection.chapterId.split('_')[1]
+                                  );
+
+                                  return (
+                                    <li className="content-item-sub2" key={subIndex}>
+                                      <Link
+                                        to={`/marketing-app/Page${chapterIndex + 1}/${subSection.chapterId}`}
+                                        className={`content-link ${
+                                          subSectionProgress.completed ? 'completed' : 'incomplete'
+                                        }`}
+                                      >
+                                        <span className="icon-page"></span>
+                                        {subSection.title}
+                                        <span className="completion-status">
+                                          {subSectionProgress.completed ? '(済)' : ''}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </Collapsible>
+                          )}
                         </li>
-                      );
-                    })}
-                  </ul>
-                </Collapsible>
+                      ))}
+                    </ul>
+                  </Collapsible>
+                )}
               </li>
             ))}
           </ul>
         </nav>
       </div>
+
+      {/* Logout Button */}
       <div>
-        <button onClick={onLogout} className="logout-button">ログアウト</button>
+        <button onClick={onLogout} className="logout-button">
+          ログアウト
+        </button>
       </div>
     </div>
   );
 };
 
-
 // Appコンポーネント
 const App = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    window.location.href = '/marketing-app/login';
+    navigate('/');  
   };
+
 
   return (
     <div className="App">
+      <KeepAlive />
       <Routes>
         <Route path="/marketing-app" element={<ProtectedRoute element={<HomePage onLogout={handleLogout} />} />} />
         <Route path="/marketing-app/Page1/:chapterId" element={<ProtectedRoute element={<Page1 />} />} />
         <Route path="/marketing-app/Page2/:chapterId" element={<ProtectedRoute element={<Page2 />} />} /> 
-        <Route path="/marketing-app/login" element={<LoginForm />} />
+        <Route path="/" element={<LoginForm />} />
         <Route path="/marketing-app/register" element={<RegisterForm />} />
         <Route path="*" element={<Navigate to="/marketing-app" />} />
       </Routes>
