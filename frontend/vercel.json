@@ -1,15 +1,19 @@
 {
-  "redirects": [
+  "builds": [
     {
-      "source": "/",
-      "destination": "/marketing-app",
-      "permanent": true
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/build"
+      }
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/marketing-app/(.*)", 
-      "destination": "/marketing-app/index.html"
-    }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
   ]
 }
