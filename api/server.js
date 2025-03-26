@@ -11,7 +11,7 @@ app.use(express.json());
 
 // CORSの設定
 app.use(cors({
-  origin: 'https://marketing-app-eight.vercel.app', 
+  origin: 'https://washi-marketing.vercel.app', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type']
 }));
