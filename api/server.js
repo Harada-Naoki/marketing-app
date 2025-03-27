@@ -1,5 +1,5 @@
 //ローカルのみ
-// require('dotenv').config();
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -12,7 +12,7 @@ app.use(express.json());
 
 // CORSの設定
 app.use(cors({
-  origin: 'https://washi-marketing.vercel.app', 
+  origin: ['http://localhost:3000', 'https://washi-marketing.vercel.app'] ,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Authorization', 'Content-Type']
 }));

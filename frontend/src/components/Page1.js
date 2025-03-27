@@ -94,6 +94,21 @@ function Page1() {
   useEffect(() => {
     startTimeRef.current = Date.now();
   }, [chapterId]);
+  
+  // チャプターが変わった後、スクロール位置を最上部へ
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  }, [chapterId]);
+  
 
   useEffect(() => {
     let cancelled = false;

@@ -93,49 +93,63 @@ function Page2() {
     navigate('/marketing-app');
   }, [navigate]);
 
-  const loadProgress = useCallback(async () => {
-    try {
+  //  チャプター遷移時に経過時間リセット
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, [chapterId]);
+  
+  // チャプターが変わった後、スクロール位置を最上部へ
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (chatContainerRef.current) {
+          chatContainerRef.current.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  }, [chapterId]);
+  
+
+  useEffect(() => {
+    let cancelled = false;
+  
+    const fetch = async () => {
       const response = await apiRequest(`/api/progress/${chapterId}`, {
         method: 'GET',
       });
   
-      if (response.data) {
-        setVisibleStep(response.data.visibleStep);
-        setQuizStarted(response.data.quizStarted);
-        setCurrentQuestionIndex(response.data.currentQuestionIndex);
-        setScore(response.data.score);
-        setStudyTime(response.data.studyTime);
+      if (cancelled) return;
   
-        // チャプターが完了している場合は結果画面を表示
-        if (response.data.completed) {
-          setShowResults(true); // 完了状態に基づいて結果画面を表示
-        } else {
-          setShowResults(false); // 完了していない場合は結果画面を非表示
-        }
+      if (response.data) {
+        if (response.data.visibleStep !== visibleStep) setVisibleStep(response.data.visibleStep ?? 0);
+        if (response.data.quizStarted !== quizStarted) setQuizStarted(response.data.quizStarted);
+        if (response.data.currentQuestionIndex !== currentQuestionIndex) setCurrentQuestionIndex(response.data.currentQuestionIndex);
+        if (response.data.score !== score) setScore(response.data.score);
+        if (response.data.studyTime !== studyTime) setStudyTime(response.data.studyTime);
+        setShowResults(response.data.completed);
+      } else {
+        // 初期化処理
+        setVisibleStep(0);
+        setQuizStarted(false);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setStudyTime(0);
+        setShowResults(false);
       }
   
-      // ローディング完了
       setIsLoading(false);
+      await saveProgress({ updateStartTime: true });
+    };
   
-      // 状態を保存 (loadProgress の終了時に保存)
-      if (response.data) {
-        await saveProgress({ updateStartTime: true });
-      }
-    } catch (error) {
-      console.error('Error loading progress', error);
-      setIsLoading(false);
-    }
-  }, [chapterId, saveProgress]);
+    fetch();
   
-  // 初回ロードフラグ
-  const hasLoaded = useRef(false);
-  
-  useEffect(() => {
-    if (!hasLoaded.current) {
-      loadProgress();
-      hasLoaded.current = true; // 初回実行後にフラグを設定
-    }
-  }, [loadProgress]);
+    return () => {
+      cancelled = true;
+    };
+  }, [chapterId]); 
 
   useEffect(() => {
     if (!isValidChapter) {
@@ -292,7 +306,6 @@ function Page2() {
   }, [saveProgress]);
 
   
-
   if (!isValidChapter) return null;
   if (isLoading) return <div>Loading...</div>;
 
