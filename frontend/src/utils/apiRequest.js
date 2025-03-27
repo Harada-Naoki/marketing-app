@@ -1,6 +1,17 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const isTokenExpired = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp < now;
+  } catch (e) {
+    return true; // 無効なトークンは期限切れとみなす
+  }
+};
 
 const refreshAccessToken = async (refreshToken) => {
   try {
@@ -17,6 +28,17 @@ const apiRequest = async (url, options = {}, navigate) => {
   let token = localStorage.getItem('token');
   const refreshToken = localStorage.getItem('refreshToken');
 
+  // ✅ リクエスト前にトークンの有効期限を確認
+  if (token && isTokenExpired(token)) {
+    console.log('[apiRequest] Access token expired, attempting refresh...');
+    token = await refreshAccessToken(refreshToken);
+    if (!token) {
+      console.error('[apiRequest] Refresh failed before request, redirecting...');
+      if (navigate) navigate('/');
+      throw new Error('Unauthorized');
+    }
+  }
+
   try {
     const response = await axios({
       url: `${API_BASE_URL}${url}`,
@@ -31,7 +53,8 @@ const apiRequest = async (url, options = {}, navigate) => {
   } catch (error) {
     console.error('Initial request error:', error.response?.data || error.message);
 
-    if (error.response && error.response.status === 403) {
+    // ✅ 401 or 403 エラーならトークンリフレッシュして再試行
+    if ((error.response?.status === 401 || error.response?.status === 403) && refreshToken) {
       token = await refreshAccessToken(refreshToken);
       if (token) {
         try {
@@ -50,8 +73,9 @@ const apiRequest = async (url, options = {}, navigate) => {
           throw retryError;
         }
       } else {
-        console.error('Token refresh failed');
-        navigate('/');  
+        console.error('[apiRequest] Refresh failed after error, redirecting...');
+        if (navigate) navigate('/');
+        throw new Error('Unauthorized');
       }
     } else {
       throw error;

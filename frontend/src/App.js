@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
+import { jwtDecode } from 'jwt-decode';
 import Collapsible from 'react-collapsible';
 import apiRequest from './utils/apiRequest';
 import KeepAlive from './utils/KeepAlive';
@@ -14,11 +15,51 @@ import ProgressTracker from './ProgressTracker';
 import { chapters } from './chapters'; 
 
 // 認証チェック
-const isAuthenticated = () => !!localStorage.getItem('token');
+const isTokenExpired = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp < now;
+  } catch {
+    return true;
+  }
+};
 
 // ProtectedRouteコンポーネント
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/" />;
+  const [allowed, setAllowed] = useState(null);
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (!token || !refreshToken) {
+        setAllowed(false);
+        return;
+      }
+
+      if (isTokenExpired(token)) {
+        const newToken = await apiRequest('/api/auth/token', {
+          method: 'POST',
+          data: { token: refreshToken }
+        });
+        if (newToken?.data?.accessToken) {
+          localStorage.setItem('token', newToken.data.accessToken);
+          setAllowed(true);
+        } else {
+          setAllowed(false);
+        }
+      } else {
+        setAllowed(true);
+      }
+    };
+
+    verifyToken();
+  }, []);
+
+  if (allowed === null) return <div>Loading...</div>;
+  return allowed ? element : <Navigate to="/" />;
 };
 
 // chapterId を解析して prefix と suffix を取得
